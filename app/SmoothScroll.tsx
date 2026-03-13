@@ -14,7 +14,6 @@ export default function SmoothScroll() {
       duration: reducedMotion ? 0 : 1.05,
       easing: (t: number) => 1 - Math.pow(1 - t, 3), // cubic out
       smoothWheel: true,
-      smoothTouch: false,
       normalizeWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 1,
