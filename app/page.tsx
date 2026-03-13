@@ -79,7 +79,7 @@ export default function Portfolio() {
               <div className="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-primary"></div>
               <div className="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-primary"></div>
               <div className="w-full h-full bg-neutral-slate flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 relative z-10">
-                <img alt="Profile photo" className="w-full h-full object-cover" data-alt="Professional headshot of a male developer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9CW1jDVyu-BMTkh0LDJsgNgdgCa9zOtuLI_4BWL5VPqvVI2R4EJFgIAdms_rqib21Z7KlnldaGZnXRdELMJgSZ4lL3-ArT9vY188ebJiYnyyPXn7rcouHRA0JQXqPYqJ63tanaYbFqYMy-rZez95Sav9cJ-uWXBccZiYaTa34fCYID4_1nORLkWd8JY6mXFxVsS5NzO3AANOZ4IrBKOL8EXNRwk9OxujV9WCO12pUlqu3G9lwWvUoOLPABmuBb2bNJ6YGOSBE7cM" />
+                <img alt="Profile photo" className="w-full h-full object-cover" data-alt="Professional headshot of a male developer" src="/My_photo.webp" />
               </div>
             </div>
           </div>
