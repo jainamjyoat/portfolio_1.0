@@ -1,26 +1,88 @@
+/* 1. Import Fonts and Icons */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+
+/* 2. Import Tailwind v4 */
 @import "tailwindcss";
 
+/* 3. Define Base Variables */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Defaulting to your dark portfolio theme */
+  --background: #0A0A0A;
+  --foreground: #F1F5F9; /* slate-100 */
+  
+  /* Portfolio Custom Colors */
+  --primary: #FFFF00;
+  --accent-yellow: #FFFF00;
+  --background-dark: #0A0A0A;
+  --neutral-slate: #141414;
 }
 
+/* Optional: If you ever want to add a light mode later */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+    --background-dark: #f8fafc;
+    --neutral-slate: #e2e8f0;
+  }
+}
+
+/* 4. Configure Tailwind v4 Theme */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  /* Custom Colors injected into Tailwind */
+  --color-primary: var(--primary);
+  --color-accent-yellow: var(--accent-yellow);
+  --color-background-dark: var(--background-dark);
+  --color-neutral-slate: var(--neutral-slate);
+  
+  /* Custom Fonts injected into Tailwind */
+  --font-display: "Space Grotesk", sans-serif;
+  --font-sans: "Inter", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* 5. Base HTML/Body Styles */
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* 6. Custom Portfolio Utilities */
+@layer utilities {
+  .grid-background {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .glass-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .stroke-text {
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.1);
+    color: transparent;
+  }
+
+  .achievement-row:hover .stroke-text {
+    -webkit-text-stroke: 1px var(--primary); 
+  }
+
+  .watermark {
+    font-size: 12rem;
+    line-height: 1;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.03);
+    pointer-events: none;
+    user-select: none;
+  }
 }
