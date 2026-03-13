@@ -45,9 +45,9 @@
 }
 
 /* 5. Base HTML/Body Styles */
-html {
+/* html {
   scroll-behavior: smooth;
-}
+} */
 
 body {
   background: var(--background);

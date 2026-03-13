@@ -1,6 +1,32 @@
-import React from 'react';
+"use client";
+import React, { useEffect } from 'react';
+// import React from 'react';
+import Lenis from 'lenis';
 
 export default function Portfolio() {
+  // Initialize Lenis smooth scrolling
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2, // Controls the speed of the scroll (default is 1.2)
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Default easing
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+    });
+
+    // The requestAnimationFrame loop that powers Lenis
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Clean up on unmount
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
   return (
     <>
       <style dangerouslySetInnerHTML={{
