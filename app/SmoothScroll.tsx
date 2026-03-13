@@ -14,7 +14,6 @@ export default function SmoothScroll() {
       duration: reducedMotion ? 0 : 1.05,
       easing: (t: number) => 1 - Math.pow(1 - t, 3), // cubic out
       smoothWheel: true,
-      normalizeWheel: true,
       wheelMultiplier: 1,
       touchMultiplier: 1,
       autoRaf: false, // we drive rAF manually to avoid duplicate loops
@@ -29,8 +28,7 @@ export default function SmoothScroll() {
 
     return () => {
       if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
-      // @ts-expect-error internal types allow destroy
-      lenis.destroy?.();
+      lenis.destroy();
     };
   }, []);
 
