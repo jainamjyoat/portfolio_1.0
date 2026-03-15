@@ -1,11 +1,48 @@
 "use client";
 
-import React from 'react';
-import { GridScan } from './GridScan';
+import React, { useEffect } from 'react';
+import Lenis from 'lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+import { GridScan } from '@/app/GridScan';
 import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
 
+// Ensure GSAP knows about ScrollTrigger
+gsap.registerPlugin(ScrollTrigger);
+
 export default function Portfolio() {
+  
+  // --- ADDED LENIS SMOOTH SCROLL + GSAP SYNC ---
+  useEffect(() => {
+    // Initialize Lenis
+    const lenis = new Lenis({
+      lerp: 0.08, // The lower the number, the smoother/heavier the scroll
+      smoothWheel: true,
+    });
+
+    // Sync Lenis scroll with GSAP's ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
+
+    // Add Lenis's requestAnimationFrame (raf) to GSAP's ticker
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    // Turn off GSAP's default lag smoothing to prevent stuttering with Lenis
+    gsap.ticker.lagSmoothing(0);
+
+    return () => {
+      // Cleanup on unmount
+      lenis.destroy();
+      gsap.ticker.remove((time) => {
+        lenis.raf(time * 1000);
+      });
+    };
+  }, []);
+  // ---------------------------------------------
+
   return (
     <div className="bg-background-dark text-slate-100 font-sans selection:bg-primary selection:text-black">
       
@@ -39,10 +76,10 @@ export default function Portfolio() {
             gridScale={0.1}
             scanColor="#FFFF00"
             scanOpacity={0.4}
-            enablePost={false} // Disabled to fix severe lag
-            bloomIntensity={0} 
-            chromaticAberration={0} 
-            noiseIntensity={0} 
+            enablePost={true} // Disabled to fix severe lag
+            bloomIntensity={0.6}
+            chromaticAberration={0.002}
+            noiseIntensity={0.01}
           />
         </div>
 
