@@ -457,7 +457,7 @@ export const GridScan: React.FC<GridScanProps> = ({
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     rendererRef.current = renderer;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25)); 
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.NoToneMapping;
@@ -541,15 +541,24 @@ export const GridScan: React.FC<GridScanProps> = ({
     };
     window.addEventListener('resize', onResize);
 
+    // FPS THROTTLING LOGIC IMPLEMENTED HERE
     let last = performance.now();
+    let lastRender = last;
+    const fpsInterval = 1000 / 30; // 30 FPS Cap
+
     const tick = () => {
+      rafRef.current = requestAnimationFrame(tick);
+
       const now = performance.now();
+      const elapsed = now - lastRender;
+
+      if (elapsed < fpsInterval) return; // Skip frame to maintain 30 FPS
+      lastRender = now - (elapsed % fpsInterval);
+
       const dt = Math.max(0, Math.min(0.1, (now - last) / 1000));
       last = now;
 
-      lookCurrent.current.copy(
-        smoothDampVec2(lookCurrent.current, lookTarget.current, lookVel.current, smoothTime, maxSpeed, dt)
-      );
+      smoothDampVec2(lookCurrent.current, lookTarget.current, lookVel.current, smoothTime, maxSpeed, dt);
 
       const tiltSm = smoothDampFloat(
         tiltCurrent.current,
@@ -573,8 +582,7 @@ export const GridScan: React.FC<GridScanProps> = ({
       yawCurrent.current = yawSm.value;
       yawVel.current = yawSm.v;
 
-      const skew = new THREE.Vector2(lookCurrent.current.x * skewScale, -lookCurrent.current.y * yBoost * skewScale);
-      material.uniforms.uSkew.value.set(skew.x, skew.y);
+      material.uniforms.uSkew.value.set(lookCurrent.current.x * skewScale, -lookCurrent.current.y * yBoost * skewScale);
       material.uniforms.uTilt.value = tiltCurrent.current * tiltScale;
       material.uniforms.uYaw.value = THREE.MathUtils.clamp(yawCurrent.current * yawScale, -0.6, 0.6);
 
@@ -585,7 +593,6 @@ export const GridScan: React.FC<GridScanProps> = ({
       } else {
         renderer.render(scene, camera);
       }
-      rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
 
@@ -836,33 +843,51 @@ function smoothDampVec2(
   smoothTime: number,
   maxSpeed: number,
   deltaTime: number
-): THREE.Vector2 {
-  const out = current.clone();
+): void {
   smoothTime = Math.max(0.0001, smoothTime);
   const omega = 2 / smoothTime;
   const x = omega * deltaTime;
   const exp = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
 
-  let change = current.clone().sub(target);
-  const originalTo = target.clone();
+  let changeX = current.x - target.x;
+  let changeY = current.y - target.y;
+
+  const originalToX = target.x;
+  const originalToY = target.y;
 
   const maxChange = maxSpeed * smoothTime;
-  if (change.length() > maxChange) change.setLength(maxChange);
-
-  target = current.clone().sub(change);
-  const temp = currentVelocity.clone().addScaledVector(change, omega).multiplyScalar(deltaTime);
-  currentVelocity.sub(temp.clone().multiplyScalar(omega));
-  currentVelocity.multiplyScalar(exp);
-
-  out.copy(target.clone().add(change.add(temp).multiplyScalar(exp)));
-
-  const origMinusCurrent = originalTo.clone().sub(current);
-  const outMinusOrig = out.clone().sub(originalTo);
-  if (origMinusCurrent.dot(outMinusOrig) > 0) {
-    out.copy(originalTo);
-    currentVelocity.set(0, 0);
+  const sqrmag = changeX * changeX + changeY * changeY;
+  if (sqrmag > maxChange * maxChange) {
+    const mag = Math.sqrt(sqrmag);
+    changeX = (changeX / mag) * maxChange;
+    changeY = (changeY / mag) * maxChange;
   }
-  return out;
+
+  const targetX = current.x - changeX;
+  const targetY = current.y - changeY;
+
+  const tempX = (currentVelocity.x + omega * changeX) * deltaTime;
+  const tempY = (currentVelocity.y + omega * changeY) * deltaTime;
+
+  currentVelocity.x = (currentVelocity.x - omega * tempX) * exp;
+  currentVelocity.y = (currentVelocity.y - omega * tempY) * exp;
+
+  let outX = targetX + (changeX + tempX) * exp;
+  let outY = targetY + (changeY + tempY) * exp;
+
+  const origMinusCurrentX = originalToX - current.x;
+  const origMinusCurrentY = originalToY - current.y;
+  const outMinusOrigX = outX - originalToX;
+  const outMinusOrigY = outY - originalToY;
+
+  if (origMinusCurrentX * outMinusOrigX + origMinusCurrentY * outMinusOrigY > 0) {
+    outX = originalToX;
+    outY = originalToY;
+    currentVelocity.x = 0;
+    currentVelocity.y = 0;
+  }
+
+  current.set(outX, outY);
 }
 
 function smoothDampFloat(

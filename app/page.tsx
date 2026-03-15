@@ -7,11 +7,11 @@ import { GridScan } from './GridScan';
 export default function Portfolio() {
   return (
     <div className="bg-background-dark text-slate-100 font-sans selection:bg-primary selection:text-black">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-background-dark/80 backdrop-blur-md">
+      {/* Navigation - OPTIMIZED: Removed backdrop-blur to save CPU/GPU */}
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-background-dark">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-2xl font-bold tracking-tighter uppercase font-display text-primary">JJ</span>
+            <span className="text-2xl font-bold tracking-tighter uppercase font-display text-primary">Jainam Jyoat</span>
           </div>
           <div className="hidden md:flex items-center gap-12 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             <a className="hover:text-primary transition-colors" href="#about">About</a>
@@ -48,7 +48,7 @@ export default function Portfolio() {
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center w-full relative z-10 pointer-events-auto">
           {/* Left Side: Typography and Buttons (Matched to Screenshot) */}
           <div className="pt-10">
-            <p className="text-primary font-bold tracking-[0.4em] uppercase text-xs mb-6">Portfolio 2024</p>
+            <p className="text-primary font-bold tracking-[0.4em] uppercase text-xs mb-6">Portfolio 2026</p>
             
             <h1 className="text-7xl md:text-[7.5rem] font-black font-display leading-[0.85] tracking-tighter uppercase mb-8">
               <span className="block text-white">Jainam</span>
@@ -94,7 +94,7 @@ export default function Portfolio() {
 
               {/* Inner Card (Grey box with image) */}
               <div className="w-64 h-64 md:w-80 md:h-80 bg-[#cccccc] flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 relative z-10 p-4">
-                <img alt="Profile photo" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9CW1jDVyu-BMTkh0LDJsgNgdgCa9zOtuLI_4BWL5VPqvVI2R4EJFgIAdms_rqib21Z7KlnldaGZnXRdELMJgSZ4lL3-ArT9vY188ebJiYnyyPXn7rcouHRA0JQXqPYqJ63tanaYbFqYMy-rZez95Sav9cJ-uWXBccZiYaTa34fCYID4_1nORLkWd8JY6mXFxVsS5NzO3AANOZ4IrBKOL8EXNRwk9OxujV9WCO12pUlqu3G9lwWvUoOLPABmuBb2bNJ6YGOSBE7cM" />
+                <img alt="Profile photo" className="w-full h-full object-cover" src="./My_photo.webp" />
               </div>
             </div>
           </div>
@@ -498,7 +498,7 @@ export default function Portfolio() {
       {/* Footer */}
       <footer className="py-16 border-t border-white/10 bg-background-dark">
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="text-2xl font-black font-display text-primary">JJ</div>
+          <div className="text-2xl font-black font-display text-primary">Jainam Jyoat</div>
           <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.3em]">
             © 2024 Jainam Jyoat. All Rights Reserved.
           </p>
