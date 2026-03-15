@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useEffect } from 'react';
-
+import React from 'react';
 import { GridScan } from './GridScan';
+import ScrollReveal from '@/components/ScrollReveal';
+import BlockReveal from '@/components/BlockReveal';
 
 export default function Portfolio() {
   return (
     <div className="bg-background-dark text-slate-100 font-sans selection:bg-primary selection:text-black">
+      
       {/* Navigation - OPTIMIZED: Removed backdrop-blur to save CPU/GPU */}
       <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-background-dark">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
@@ -26,10 +28,9 @@ export default function Portfolio() {
         </div>
       </nav>
 
-      {/* Hero Section */}
+      {/* Hero Section (No Scroll Reveal here so it loads instantly) */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        
-        {/* EXACT GridScan Features from your code snippet */}
+        {/* OPTIMIZED GridScan Features */}
         <div className="absolute inset-0 z-0 pointer-events-none">
           <GridScan
             sensitivity={0.55}
@@ -38,15 +39,15 @@ export default function Portfolio() {
             gridScale={0.1}
             scanColor="#FFFF00"
             scanOpacity={0.4}
-            enablePost={true}
-            bloomIntensity={0.6}
-            chromaticAberration={0.002}
-            noiseIntensity={0.01}
+            enablePost={false} // Disabled to fix severe lag
+            bloomIntensity={0} 
+            chromaticAberration={0} 
+            noiseIntensity={0} 
           />
         </div>
 
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center w-full relative z-10 pointer-events-auto">
-          {/* Left Side: Typography and Buttons (Matched to Screenshot) */}
+          {/* Left Side: Typography and Buttons */}
           <div className="pt-10">
             <p className="text-primary font-bold tracking-[0.4em] uppercase text-xs mb-6">Portfolio 2026</p>
             
@@ -77,24 +78,17 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Right Side: Profile Image with Brackets (Matched to Screenshot) */}
+          {/* Right Side: Profile Image with Brackets */}
           <div className="flex justify-center md:justify-end">
             <div className="relative p-8 inline-block">
-              {/* Top-Left Yellow Bracket */}
               <div className="absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] border-primary"></div>
-              {/* Bottom-Right Yellow Bracket */}
               <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] border-primary"></div>
-              
-              {/* Faint brackets on the other corners */}
               <div className="absolute top-0 right-0 w-8 h-8 border-t-[1px] border-r-[1px] border-white/20"></div>
               <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[1px] border-l-[1px] border-white/20"></div>
-
-              {/* Faint Inner Box Line */}
               <div className="absolute inset-4 border border-white/10 pointer-events-none"></div>
 
-              {/* Inner Card (Grey box with image) */}
               <div className="w-64 h-64 md:w-80 md:h-80 bg-[#cccccc] flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 relative z-10 p-4">
-                <img alt="Profile photo" className="w-full h-full object-cover" src="./My_photo.webp" />
+                <img alt="Profile photo" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9CW1jDVyu-BMTkh0LDJsgNgdgCa9zOtuLI_4BWL5VPqvVI2R4EJFgIAdms_rqib21Z7KlnldaGZnXRdELMJgSZ4lL3-ArT9vY188ebJiYnyyPXn7rcouHRA0JQXqPYqJ63tanaYbFqYMy-rZez95Sav9cJ-uWXBccZiYaTa34fCYID4_1nORLkWd8JY6mXFxVsS5NzO3AANOZ4IrBKOL8EXNRwk9OxujV9WCO12pUlqu3G9lwWvUoOLPABmuBb2bNJ6YGOSBE7cM" loading="eager" />
               </div>
             </div>
           </div>
@@ -107,17 +101,25 @@ export default function Portfolio() {
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="flex flex-col md:flex-row gap-16 mb-24 border-b border-white/10 pb-20">
             <div className="md:w-1/3">
-              <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none">
-                About<br /><span className="text-primary italic">Me.</span>
-              </h2>
+              <BlockReveal>
+                <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none text-white">
+                  About<br /><span className="text-primary italic">Me.</span>
+                </h2>
+              </BlockReveal>
             </div>
             <div className="md:w-2/3 flex items-center">
-              <p className="text-2xl text-slate-400 leading-relaxed font-light">
+              <ScrollReveal
+                baseOpacity={0.8}
+                blurStrength={4}
+                containerClassName="!my-0"
+                textClassName="!text-2xl !text-slate-400 !leading-relaxed !font-light"
+              >
                 Passionate developer focused on creating clean, efficient, and user-centric solutions. Currently pursuing my B.Tech in Computer Science, I specialize in bridging the gap between robust back-end logic and intuitive front-end experiences.
-              </p>
+              </ScrollReveal>
             </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 border border-white/10 bg-background-dark">
+          
+          <BlockReveal className="grid grid-cols-1 md:grid-cols-4 border border-white/10 bg-background-dark">
             <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 hover:bg-primary transition-all group cursor-default">
               <span className="material-symbols-outlined text-primary mb-8 block text-4xl group-hover:text-black">code</span>
               <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">Full Stack</h3>
@@ -138,7 +140,7 @@ export default function Portfolio() {
               <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">Open Source</h3>
               <p className="text-sm text-slate-500 group-hover:text-black/70">Contributing to the global dev community.</p>
             </div>
-          </div>
+          </BlockReveal>
         </div>
       </section>
 
@@ -146,15 +148,16 @@ export default function Portfolio() {
       <section className="py-32 bg-neutral-slate border-t border-white/5 relative overflow-hidden" id="projects">
         <div className="watermark absolute -right-40 bottom-20">WORKS</div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="max-w-2xl mb-24">
+          <BlockReveal className="max-w-2xl mb-24">
             <p className="text-primary font-bold tracking-[0.4em] uppercase text-sm mb-4">Selected Portfolio</p>
-            <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none">
+            <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none text-white">
               Featured<br /><span className="text-primary italic">Projects.</span>
             </h2>
-          </div>
+          </BlockReveal>
+          
           <div className="space-y-0 border-t border-white/10">
             {/* Project 1 */}
-            <div className="group border-b border-white/10 py-20 transition-all">
+            <BlockReveal className="group border-b border-white/10 py-20 transition-all">
               <div className="grid md:grid-cols-12 gap-12 items-center">
                 <div className="md:col-span-2 text-6xl md:text-8xl font-black text-white/5 font-display group-hover:text-primary/10 transition-colors">01</div>
                 <div className="md:col-span-5">
@@ -168,16 +171,17 @@ export default function Portfolio() {
                 </div>
                 <div className="md:col-span-5 relative">
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                    <img alt="Project preview" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcfFg97-WM-MIhLbwOT2Ph7qTTl1fP-E8HbvEPBsT6ph7wnwpn_Ir3qB2_i63HZwvP8lfAAqlPJSpS_sowqAhv-kbH05rxZIY9CAbCx0Vse32wjKxy-ARjXJr9b2espg0aO2t8ZiC31MMzM_yY9A2QVeHAftjKl5V7KlM8R_Azw06NPy8mOu6qbMnkL6Z4WtQZ7uvRLLGcI7WHf4QKGQVNFzpFQ0yO3BdXBOuLLVVUmvCrlfHUc_ciXgXW7Ug0qAgWMLWgKnhfv9I" />
+                    <img alt="Project preview" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcfFg97-WM-MIhLbwOT2Ph7qTTl1fP-E8HbvEPBsT6ph7wnwpn_Ir3qB2_i63HZwvP8lfAAqlPJSpS_sowqAhv-kbH05rxZIY9CAbCx0Vse32wjKxy-ARjXJr9b2espg0aO2t8ZiC31MMzM_yY9A2QVeHAftjKl5V7KlM8R_Azw06NPy8mOu6qbMnkL6Z4WtQZ7uvRLLGcI7WHf4QKGQVNFzpFQ0yO3BdXBOuLLVVUmvCrlfHUc_ciXgXW7Ug0qAgWMLWgKnhfv9I" loading="lazy" />
                   </div>
                   <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="#">
                     <span className="material-symbols-outlined text-3xl">arrow_outward</span>
                   </a>
                 </div>
               </div>
-            </div>
+            </BlockReveal>
+
             {/* Project 2 */}
-            <div className="group border-b border-white/10 py-20 transition-all">
+            <BlockReveal className="group border-b border-white/10 py-20 transition-all">
               <div className="grid md:grid-cols-12 gap-12 items-center">
                 <div className="md:col-span-2 text-6xl md:text-8xl font-black text-white/5 font-display group-hover:text-primary/10 transition-colors">02</div>
                 <div className="md:col-span-5">
@@ -191,14 +195,14 @@ export default function Portfolio() {
                 </div>
                 <div className="md:col-span-5 relative">
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                    <img alt="Project preview" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPgdosO2T23ydYx-rKo3omA3eAbvKAP3d2ueiIfxN4-nQw3ghGsZ1sNLYyWKFLjOJHj-kANnLBGbOaQxztbxsKHK9-b8J6eSzyCXtXtK5rGeb2q5ZnOrBmz9H55by1mt4bEOxpKD7dPhgSJEd839acVtx2crKCnkSfSJlNx_XaoRTn0rZgRYq6t8UR2CHzLv-lWd0dLTjQvC0Iicj6Ng_URrFWbQoBqX0tVxYVCT55mLrWPKgQ6_nQJIU_KrwWoUQYtqoT0t0SXCE" />
+                    <img alt="Project preview" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPgdosO2T23ydYx-rKo3omA3eAbvKAP3d2ueiIfxN4-nQw3ghGsZ1sNLYyWKFLjOJHj-kANnLBGbOaQxztbxsKHK9-b8J6eSzyCXtXtK5rGeb2q5ZnOrBmz9H55by1mt4bEOxpKD7dPhgSJEd839acVtx2crKCnkSfSJlNx_XaoRTn0rZgRYq6t8UR2CHzLv-lWd0dLTjQvC0Iicj6Ng_URrFWbQoBqX0tVxYVCT55mLrWPKgQ6_nQJIU_KrwWoUQYtqoT0t0SXCE" loading="lazy" />
                   </div>
                   <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="#">
                     <span className="material-symbols-outlined text-3xl">arrow_outward</span>
                   </a>
                 </div>
               </div>
-            </div>
+            </BlockReveal>
           </div>
         </div>
       </section>
@@ -206,10 +210,13 @@ export default function Portfolio() {
       {/* Technical Skills */}
       <section className="py-32 border-t border-white/5 bg-background-dark/95" id="skills">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter mb-24 leading-none">
-            Technical<br /><span className="text-primary">Mastery.</span>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-y-20 md:gap-x-16">
+          <BlockReveal className="mb-24">
+            <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none text-white">
+              Technical<br /><span className="text-primary">Mastery.</span>
+            </h2>
+          </BlockReveal>
+          
+          <BlockReveal className="grid grid-cols-1 md:grid-cols-3 gap-y-20 md:gap-x-16">
             {/* Programming */}
             <div className="space-y-12">
               <div className="flex items-center gap-4">
@@ -291,7 +298,7 @@ export default function Portfolio() {
                 </div>
               </div>
             </div>
-          </div>
+          </BlockReveal>
         </div>
       </section>
 
@@ -301,10 +308,10 @@ export default function Portfolio() {
           Awards
         </div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
+          <BlockReveal className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-8">
             <div className="max-w-2xl">
               <p className="text-primary font-bold tracking-[0.4em] uppercase text-sm mb-4">Milestones & Recognition</p>
-              <h2 className="text-6xl md:text-9xl font-bold uppercase tracking-tighter leading-[0.85] font-display">
+              <h2 className="text-6xl md:text-9xl font-bold uppercase tracking-tighter leading-[0.85] font-display text-white">
                 Proven <br />
                 <span className="text-slate-500 italic">Excellence.</span>
               </h2>
@@ -312,10 +319,11 @@ export default function Portfolio() {
             <div className="hidden md:block">
               <span className="material-symbols-outlined text-primary text-8xl">military_tech</span>
             </div>
-          </div>
+          </BlockReveal>
+          
           <div className="border-t border-white/10">
             {/* Achievement Item 1 */}
-            <div className="achievement-row group border-b border-white/10 py-16 transition-all cursor-default hover:bg-white/[0.02]">
+            <BlockReveal className="achievement-row group border-b border-white/10 py-16 transition-all cursor-default hover:bg-white/[0.02]">
               <div className="flex flex-col md:flex-row gap-12 items-start">
                 <div className="achievement-year transition-all duration-300 md:w-1/4 text-7xl md:text-9xl tracking-tighter font-black text-white/5 font-display group-hover:text-primary/10">
                   '23
@@ -337,9 +345,10 @@ export default function Portfolio() {
                   <span className="material-symbols-outlined text-slate-800 group-hover:text-primary transition-all group-hover:translate-x-2 text-4xl">arrow_outward</span>
                 </div>
               </div>
-            </div>
+            </BlockReveal>
+
             {/* Achievement Item 2 */}
-            <div className="achievement-row group border-b border-white/10 py-16 transition-all cursor-default hover:bg-white/[0.02]">
+            <BlockReveal className="achievement-row group border-b border-white/10 py-16 transition-all cursor-default hover:bg-white/[0.02]">
               <div className="flex flex-col md:flex-row gap-12 items-start">
                 <div className="achievement-year transition-all duration-300 md:w-1/4 text-7xl md:text-9xl tracking-tighter font-black text-white/5 font-display group-hover:text-primary/10">
                   '22
@@ -361,7 +370,7 @@ export default function Portfolio() {
                   <span className="material-symbols-outlined text-slate-800 group-hover:text-primary transition-all group-hover:translate-x-2 text-4xl">arrow_outward</span>
                 </div>
               </div>
-            </div>
+            </BlockReveal>
           </div>
         </div>
       </section>
@@ -370,14 +379,14 @@ export default function Portfolio() {
       <section className="py-32 border-t border-white/5 bg-neutral-slate/80 relative overflow-hidden" id="certifications">
         <div className="watermark absolute -left-20 top-40 uppercase">Verified</div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="mb-24">
+          <BlockReveal className="mb-24">
             <p className="text-primary font-bold tracking-[0.4em] uppercase text-sm mb-4">Professional Growth</p>
-            <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none">
+            <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none text-white">
               Academic<br /><span className="text-primary italic">Certificates.</span>
             </h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-4 border-t border-white/10 bg-background-dark">
-            {/* Cert 1 */}
+          </BlockReveal>
+          
+          <BlockReveal className="grid grid-cols-1 md:grid-cols-4 border-t border-white/10 bg-background-dark">
             <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer">
               <div className="flex flex-col h-full justify-between">
                 <div>
@@ -391,7 +400,6 @@ export default function Portfolio() {
                 </a>
               </div>
             </div>
-            {/* Cert 2 */}
             <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer">
               <div className="flex flex-col h-full justify-between">
                 <div>
@@ -405,7 +413,6 @@ export default function Portfolio() {
                 </a>
               </div>
             </div>
-            {/* Cert 3 */}
             <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer">
               <div className="flex flex-col h-full justify-between">
                 <div>
@@ -419,7 +426,6 @@ export default function Portfolio() {
                 </a>
               </div>
             </div>
-            {/* Cert 4 */}
             <div className="p-12 group hover:bg-primary transition-all cursor-pointer">
               <div className="flex flex-col h-full justify-between">
                 <div>
@@ -433,7 +439,7 @@ export default function Portfolio() {
                 </a>
               </div>
             </div>
-          </div>
+          </BlockReveal>
         </div>
       </section>
 
@@ -443,13 +449,22 @@ export default function Portfolio() {
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid md:grid-cols-2 gap-24">
             <div>
-              <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter mb-10 leading-none">
-                Let's<br /><span className="text-primary italic">Talk.</span>
-              </h2>
-              <p className="text-slate-400 text-xl mb-12 font-light leading-relaxed">
+              <BlockReveal className="mb-10">
+                <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none text-white">
+                  Let's<br /><span className="text-primary italic">Talk.</span>
+                </h2>
+              </BlockReveal>
+              
+              <ScrollReveal
+                baseOpacity={0.1}
+                blurStrength={4}
+                containerClassName="!my-0 !mb-12"
+                textClassName="!text-slate-400 !text-xl !font-light !leading-relaxed"
+              >
                 I'm currently looking for new opportunities. Whether you have a question or just want to say hi, my inbox is always open!
-              </p>
-              <div className="space-y-8">
+              </ScrollReveal>
+
+              <BlockReveal className="space-y-8">
                 <a className="flex items-center gap-6 text-slate-300 hover:text-primary transition-colors group" href="mailto:hello@jainam.dev">
                   <span className="material-symbols-outlined p-5 bg-white/5 group-hover:bg-primary group-hover:text-black transition-colors text-3xl">mail</span>
                   <span className="text-lg font-bold font-display uppercase tracking-widest">hello@jainam.dev</span>
@@ -466,9 +481,10 @@ export default function Portfolio() {
                   </div>
                   <span className="text-lg font-bold font-display uppercase tracking-widest">GitHub /jainamjyoat</span>
                 </a>
-              </div>
+              </BlockReveal>
             </div>
-            <div className="relative p-12 bg-white/[0.02] border border-white/10">
+            
+            <BlockReveal className="relative p-12 bg-white/[0.02] border border-white/10">
               <div className="absolute -top-2 -left-2 w-4 h-4 bg-primary"></div>
               <form className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -490,7 +506,7 @@ export default function Portfolio() {
                   <span className="material-symbols-outlined">send</span>
                 </button>
               </form>
-            </div>
+            </BlockReveal>
           </div>
         </div>
       </section>
@@ -500,7 +516,7 @@ export default function Portfolio() {
         <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-10">
           <div className="text-2xl font-black font-display text-primary">Jainam Jyoat</div>
           <p className="text-slate-500 text-xs font-bold uppercase tracking-[0.3em]">
-            © 2024 Jainam Jyoat. All Rights Reserved.
+            © 2026 Jainam Jyoat. All Rights Reserved.
           </p>
           <div className="flex gap-10 text-slate-500 text-xs font-bold uppercase tracking-[0.2em]">
             <a className="hover:text-primary transition-colors" href="#">Twitter</a>
