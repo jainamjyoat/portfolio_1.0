@@ -86,3 +86,38 @@ body {
     user-select: none;
   }
 }
+
+
+@layer base {
+  /* 1. Target the scrollbar itself */
+  ::-webkit-scrollbar {
+    width: 10px; /* Adjust thickness as needed */
+    background-color: transparent; /* Makes the track area see-through */
+  }
+
+  /* 2. Target the 'Track' (the background area of the bar) */
+  ::-webkit-scrollbar-track {
+    background-color: transparent; /* Ensures the background shows through */
+    margin-block: 4px; /* Optional: adds spacing at top/bottom */
+  }
+
+  /* 3. Target the 'Thumb' (the part you actually grab) */
+  ::-webkit-scrollbar-thumb {
+    /* Use a semi-transparent version of your primary yellow or white */
+    background-color: rgba(255, 255, 0, 0.3); 
+    border-radius: 20px;
+    border: 2px solid transparent; /* Creates a padding effect */
+    background-clip: content-box; /* Makes the bar look slimmer */
+  }
+
+  /* 4. Hover state for the thumb */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255, 255, 0, 0.8); /* Gets brighter on hover */
+  }
+
+  /* 5. Firefox Support (More limited, but handles transparency) */
+  * {
+    scrollbar-color: rgba(255, 255, 0, 0.3) transparent;
+    scrollbar-width: thin;
+  }
+}
