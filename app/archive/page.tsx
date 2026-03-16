@@ -88,14 +88,14 @@ export default function ArchivePage() {
           >
             Back to Home
           </TransitionLink>
-          <a 
-            href="/Jainam Jyoat (1).pdf" 
+          {/* <a 
+            href="/resume" 
             target="_blank" 
             rel="noopener noreferrer"
             className="bg-primary text-black px-6 py-2 font-bold text-sm uppercase tracking-tighter hover:bg-white transition-all inline-block"
           >
             Resume
-          </a>
+          </a> */}
         </div>
       </nav>
 

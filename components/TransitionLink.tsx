@@ -16,9 +16,17 @@ export default function TransitionLink({ children, href, className, ...props }: 
   const handleTransition = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
 
+    // --- THE FIX: Make the URL checking bulletproof ---
+    const hrefString = href.toString();
     let destText = "SYSTEM_NAV_";
-    if (href === '/' || href.toString().includes('#')) destText = "HOME_ENVIRONMENT_";
-    if (href === '/archive') destText = "ARCHIVE_INDEX_";
+    
+    if (hrefString === '/' || hrefString.startsWith('/#')) {
+      destText = "HOME_ENVIRONMENT_";
+    } else if (hrefString.includes('/archive')) {
+      destText = "ARCHIVE_INDEX_";
+    } else if (hrefString.includes('/resume')) {
+      destText = "PROFESSIONAL_DOSSIER_";
+    }
 
     const container = document.createElement('div');
     container.className = "fixed inset-0 z-[9999] pointer-events-none overflow-hidden";
@@ -37,7 +45,7 @@ export default function TransitionLink({ children, href, className, ...props }: 
     textWrapper.className = "overflow-hidden"; 
     
     const textNode = document.createElement('span');
-    textNode.className = "block text-black font-display font-black text-4xl md:text-7xl lg:text-8xl uppercase tracking-tighter will-change-transform";
+    textNode.className = "block text-black font-display font-black text-4xl md:text-7xl lg:text-8xl uppercase tracking-tighter will-change-transform text-center px-4";
     textNode.innerText = destText;
 
     const subTextNode = document.createElement('span');
@@ -68,25 +76,17 @@ export default function TransitionLink({ children, href, className, ...props }: 
       
       // --- PHASE 2: THE CPU HANDOFF ---
       .add(() => {
-        // 1. Pause GSAP completely so it stops fighting Next.js for CPU power
         tl.pause(); 
-
-        // 2. Trigger the heavy React route change
         router.push(href.toString());
         window.scrollTo(0, 0); 
 
-        // 3. Wait 800ms. This gives the Three.js Ballpit plenty of time to compile its shaders 
-        // while the user safely looks at the solid yellow loading screen.
         setTimeout(() => {
-          // 4. Resume the GSAP timeline now that the CPU is free!
           tl.play(); 
         }, 800);
       })
 
       // --- PHASE 3: EXIT SEQUENCE ---
-      // Slide the text away first
       .to([textNode, subTextNode], { yPercent: -100, duration: 0.4, ease: "expo.in" })
-      // Then peel the layers off smoothly
       .to(layer3, { yPercent: -100, duration: 0.6, ease: "expo.inOut" }, "-=0.1")
       .to(layer2, { yPercent: -100, duration: 0.6, ease: "expo.inOut" }, "-=0.45")
       .to(layer1, { yPercent: -100, duration: 0.6, ease: "expo.inOut" }, "-=0.45");
