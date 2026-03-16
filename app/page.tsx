@@ -8,7 +8,8 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { GridScan } from '@/app/GridScan';
 import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
-import Link from 'next/link';
+import TransitionLink from '@/components/TransitionLink';
+import Marquee from '@/components/Marquee'
 
 // Ensure GSAP knows about ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
@@ -100,13 +101,12 @@ export default function Portfolio() {
             </p>
             
             <div className="flex flex-wrap gap-4 items-center">
-            <Link 
+              <TransitionLink 
                 href="/archive" 
                 className="px-6 py-4 bg-primary text-black font-bold uppercase tracking-widest text-xs hover:bg-white transition-all flex items-center gap-3"
               >
-                View Projects
-                <span className="material-symbols-outlined text-base">arrow_forward</span>
-              </Link>
+                View Projects <span className="material-symbols-outlined text-base">arrow_forward</span>
+              </TransitionLink>
               <a className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" href="https://github.com/jainamjyoat" title="GitHub">
                 <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
               </a>
@@ -135,6 +135,8 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
+
+     
 
       {/* About Section */}
       <section className="py-32 border-t border-white/5 relative overflow-hidden bg-background-dark/95" id="about">
@@ -202,19 +204,30 @@ export default function Portfolio() {
               <div className="grid md:grid-cols-12 gap-12 items-center">
                 <div className="md:col-span-2 text-6xl md:text-8xl font-black text-white/5 font-display group-hover:text-primary/10 transition-colors">01</div>
                 <div className="md:col-span-5">
-                  <h3 className="text-4xl md:text-5xl font-bold mb-6 font-display group-hover:text-primary transition-colors">Plant Phenology Detector</h3>
-                  <p className="text-slate-400 text-lg mb-8 font-light">AI-driven system to monitor and analyze crop health and growth cycles using computer vision and satellite imagery.</p>
+                  {/* Freelance / Commercial Tags */}
+                  <div className="flex gap-4 mb-4">
+                    <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs">Freelance</span>
+                    <span className="text-slate-500 font-bold tracking-[0.2em] uppercase text-xs">Commercial</span>
+                  </div>
+                  
+                  <h3 className="text-4xl md:text-5xl font-bold mb-6 font-display group-hover:text-primary transition-colors">Varanasi Tours India</h3>
+                  
+                  <p className="text-slate-400 text-lg mb-8 font-light">
+                    A high-performance commercial tourism platform designed to showcase the spiritual ghats, cultural heritage, and classical music of the city. Built to drive seamless user bookings and deliver an immersive digital experience.
+                  </p>
+                  
                   <div className="flex flex-wrap gap-3">
-                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">Python</span>
-                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">TensorFlow</span>
                     <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">React</span>
+                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">Tailwind CSS</span>
+                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">Next.js</span>
                   </div>
                 </div>
                 <div className="md:col-span-5 relative">
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                    <img alt="Project preview" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcfFg97-WM-MIhLbwOT2Ph7qTTl1fP-E8HbvEPBsT6ph7wnwpn_Ir3qB2_i63HZwvP8lfAAqlPJSpS_sowqAhv-kbH05rxZIY9CAbCx0Vse32wjKxy-ARjXJr9b2espg0aO2t8ZiC31MMzM_yY9A2QVeHAftjKl5V7KlM8R_Azw06NPy8mOu6qbMnkL6Z4WtQZ7uvRLLGcI7WHf4QKGQVNFzpFQ0yO3BdXBOuLLVVUmvCrlfHUc_ciXgXW7Ug0qAgWMLWgKnhfv9I" loading="lazy" />
+                    {/* Update this src to a screenshot of the Varanasi Tours website! */}
+                    <img alt="Varanasi Tours website preview" className="w-full h-full object-cover" src="./VTI 1.webp" loading="lazy" />
                   </div>
-                  <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="#">
+                  <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="https://varanasitoursindia.com" target="_blank" rel="noopener noreferrer">
                     <span className="material-symbols-outlined text-3xl">arrow_outward</span>
                   </a>
                 </div>
@@ -236,7 +249,7 @@ export default function Portfolio() {
                 </div>
                 <div className="md:col-span-5 relative">
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                    <img alt="Project preview" className="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPgdosO2T23ydYx-rKo3omA3eAbvKAP3d2ueiIfxN4-nQw3ghGsZ1sNLYyWKFLjOJHj-kANnLBGbOaQxztbxsKHK9-b8J6eSzyCXtXtK5rGeb2q5ZnOrBmz9H55by1mt4bEOxpKD7dPhgSJEd839acVtx2crKCnkSfSJlNx_XaoRTn0rZgRYq6t8UR2CHzLv-lWd0dLTjQvC0Iicj6Ng_URrFWbQoBqX0tVxYVCT55mLrWPKgQ6_nQJIU_KrwWoUQYtqoT0t0SXCE" loading="lazy" />
+                    <img alt="Project preview" className="w-full h-full object-cover" src="./CALAYX.webp" loading="lazy" />
                   </div>
                   <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="#">
                     <span className="material-symbols-outlined text-3xl">arrow_outward</span>
