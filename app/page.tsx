@@ -9,7 +9,7 @@ import { GridScan } from '@/app/GridScan';
 import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
 import TransitionLink from '@/components/TransitionLink';
-import Marquee from '@/components/Marquee'
+
 
 // Ensure GSAP knows about ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
