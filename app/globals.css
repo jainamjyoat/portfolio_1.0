@@ -121,3 +121,15 @@ body {
     scrollbar-width: thin;
   }
 }
+
+@layer utilities {
+  .hover-glow:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 0, 0.1); /* Updated to your #FFFF00 yellow */
+    border-color: rgba(255, 255, 0, 0.3);
+  }
+}
+
+/* Ensure font fallback is consistent */
+.font-display {
+  font-family: "Space Grotesk", sans-serif;
+}
