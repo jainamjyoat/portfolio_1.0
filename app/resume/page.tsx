@@ -97,7 +97,7 @@ export default function ResumePage() {
             </TransitionLink>
             
             <a 
-              href="/resume.pdf" 
+              href="/Jainam Jyoat (1).pdf" 
               download
               className="bg-primary text-black font-bold px-8 py-3 flex items-center justify-center gap-2 hover:bg-white transition-colors font-display text-sm uppercase tracking-widest"
             >
@@ -175,7 +175,7 @@ export default function ResumePage() {
                       <h3 className="text-2xl font-bold text-white group-hover:text-primary transition-colors font-display">UI / UX Intern</h3>
                       <p className="text-slate-400 font-medium text-lg">
                         Sucantis Biotech Pvt. Ltd. | 
-                        <a className="text-primary text-sm underline ml-1" href="#" target="_blank" rel="noopener noreferrer">Link</a>
+                        <a className="text-primary text-sm underline ml-1" href="https://drive.google.com/file/d/1xQsuhrBDlorqQZGmYbt1UiWymqoq3ahK/view" target="_blank" rel="noopener noreferrer">Link</a>
                       </p>
                     </div>
                     <span className="text-primary font-mono text-sm mt-1 md:mt-0">JUN' 25 — JUL' 25</span>
@@ -194,7 +194,7 @@ export default function ResumePage() {
                       <h3 className="text-2xl font-bold text-white group-hover:text-primary transition-colors font-display">Cyber Security Intern</h3>
                       <p className="text-slate-400 font-medium text-lg">
                         Threat Prism | 
-                        <a className="text-primary text-sm underline ml-1" href="#" target="_blank" rel="noopener noreferrer">Link</a>
+                        <a className="text-primary text-sm underline ml-1" href="https://drive.google.com/file/d/1W-IOc9lJqmAraLsCEFiAa8yyKUivNMVD/view" target="_blank" rel="noopener noreferrer">Link</a>
                       </p>
                     </div>
                     <span className="text-primary font-mono text-sm mt-1 md:mt-0">MAR' 24 — APR' 24</span>
@@ -220,7 +220,7 @@ export default function ResumePage() {
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-[10px] bg-primary text-black px-2 py-0.5 font-bold">OCT' 25</span>
-                        <TransitionLink href="/archive" className="text-primary text-[10px] font-bold underline">
+                        <TransitionLink href="https://github.com/jainamjyoat/Plant-Phenology-State-Detector" className="text-primary text-[10px] font-bold underline">
                           VIEW ARCHIVE
                         </TransitionLink>
                       </div>
@@ -248,7 +248,7 @@ export default function ResumePage() {
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-[10px] bg-primary text-black px-2 py-0.5 font-bold">OCT' 25</span>
-                        <TransitionLink href="/archive" className="text-primary text-[10px] font-bold underline">
+                        <TransitionLink href="https://github.com/jainamjyoat/ai-marketplace-assistant" className="text-primary text-[10px] font-bold underline">
                           VIEW ARCHIVE
                         </TransitionLink>
                       </div>
