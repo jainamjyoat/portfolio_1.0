@@ -70,6 +70,10 @@ uniform float uScanSoftness;
 uniform float uPhaseTaper;
 uniform float uScanDuration;
 uniform float uScanDelay;
+
+// --- AUDIO UNIFORM ---
+uniform float uAudioPulse; 
+
 varying vec2 vUv;
 
 uniform float uScanStarts[8];
@@ -99,12 +103,12 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     rd.xy += skew * rd.z;
 
     vec3 color = vec3(0.0);
-  float minT = 1e20;
-  float gridScale = max(1e-5, uGridScale);
+    float minT = 1e20;
+    float gridScale = max(1e-5, uGridScale);
     float fadeStrength = 2.0;
     vec2 gridUV = vec2(0.0);
 
-  float hitIsY = 1.0;
+    float hitIsY = 1.0;
     for (int i = 0; i < 4; i++)
     {
         float isY = float(i < 2);
@@ -117,34 +121,29 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
         float depthBoost = smoothstep(0.0, 3.0, h.z);
         h.xy += skew * 0.15 * depthBoost;
 
-    bool use = t > 0.0 && t < minT;
-    gridUV = use ? mix(h.zy, h.xz, isY) / gridScale : gridUV;
-    minT = use ? t : minT;
-    hitIsY = use ? isY : hitIsY;
+        bool use = t > 0.0 && t < minT;
+        gridUV = use ? mix(h.zy, h.xz, isY) / gridScale : gridUV;
+        minT = use ? t : minT;
+        hitIsY = use ? isY : hitIsY;
     }
 
     vec3 hit = ro + rd * minT;
     float dist = length(hit - ro);
 
-  float jitterAmt = clamp(uLineJitter, 0.0, 1.0);
-  if (jitterAmt > 0.0) {
-    vec2 j = vec2(
-      sin(gridUV.y * 2.7 + iTime * 1.8),
-      cos(gridUV.x * 2.3 - iTime * 1.6)
-    ) * (0.15 * jitterAmt);
-    gridUV += j;
-  }
+  // NO JITTER: Keeping the grid perfectly stable
   float fx = fract(gridUV.x);
   float fy = fract(gridUV.y);
   float ax = min(fx, 1.0 - fx);
   float ay = min(fy, 1.0 - fy);
   float wx = fwidth(gridUV.x);
   float wy = fwidth(gridUV.y);
-  float halfPx = max(0.0, uLineThickness) * 0.5;
+  
+  // Audio cleanly thickens the lines just slightly on the bass hit
+  float audioEnergy = clamp(uAudioPulse * 1.5, 0.0, 1.0);
+  float halfPx = max(0.0, uLineThickness + (audioEnergy * 0.3)) * 0.5;
 
   float tx = halfPx * wx;
   float ty = halfPx * wy;
-
   float aax = wx;
   float aay = wy;
 
@@ -172,15 +171,9 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     }
   }
   float primaryMask = max(lineX, lineY);
+  float primaryNodeMask = lineX * lineY; // Intersections
 
   vec2 gridUV2 = (hitIsY > 0.5 ? hit.xz : hit.zy) / gridScale;
-  if (jitterAmt > 0.0) {
-    vec2 j2 = vec2(
-      cos(gridUV2.y * 2.1 - iTime * 1.4),
-      sin(gridUV2.x * 2.5 + iTime * 1.7)
-    ) * (0.15 * jitterAmt);
-    gridUV2 += j2;
-  }
   float fx2 = fract(gridUV2.x);
   float fy2 = fract(gridUV2.y);
   float ax2 = min(fx2, 1.0 - fx2);
@@ -215,20 +208,24 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     }
   }
     float altMask = max(lineX2, lineY2);
-
+    
     float edgeDistX = min(abs(hit.x - (-0.5)), abs(hit.x - 0.5));
     float edgeDistY = min(abs(hit.y - (-0.2)), abs(hit.y - 0.2));
     float edgeDist = mix(edgeDistY, edgeDistX, hitIsY);
     float edgeGate = 1.0 - smoothstep(gridScale * 0.5, gridScale * 2.0, edgeDist);
     altMask *= edgeGate;
 
+    float altNodeMask = lineX2 * lineY2 * edgeGate; // Intersections
+
   float lineMask = max(primaryMask, altMask);
+  float nodeMask = max(primaryNodeMask, altNodeMask);
 
     float fade = exp(-dist * fadeStrength);
 
     float dur = max(0.05, uScanDuration);
     float del = max(0.0, uScanDelay);
     float scanZMax = 2.0;
+    
     float widthScale = max(0.1, uScanGlow);
     float sigma = max(0.001, 0.18 * widthScale * uScanSoftness);
     float sigmaA = sigma * 2.0;
@@ -280,21 +277,44 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
       combinedAura += (auraBandI * 0.25) * phaseWindowI * clamp(uScanOpacity, 0.0, 1.0);
     }
 
-  float lineVis = lineMask;
-  vec3 gridCol = uLinesColor * lineVis * fade;
-  vec3 scanCol = uScanColor * combinedPulse;
-  vec3 scanAura = uScanColor * combinedAura;
+    float lineVis = lineMask;
+    
+    // --- HIGH-END LIGHTING PHYSICS ---
+    vec3 hotWhite = vec3(1.0, 1.0, 1.0);
+    
+    // 1. Sonar Rings: Expanding bands of light triggered by bass
+    float sonarRing = sin(dist * 15.0 - iTime * 8.0);
+    float sonarPulse = smoothstep(0.95, 1.0, sonarRing) * audioEnergy * 4.0;
 
-    color = gridCol + scanCol + scanAura;
+    // 2. Node Sparks: Intersections of the grid flash intensely to the music
+    float nodeSpark = nodeMask * audioEnergy * 3.0;
+
+    // Build the final color by layering the pure light effects
+    vec3 baseGrid = uLinesColor * lineVis;
+    vec3 sonarGlowLayer = uScanColor * sonarPulse * lineVis;
+    vec3 sparkLayer = hotWhite * nodeSpark;
+
+    vec3 gridCol = (baseGrid + sonarGlowLayer + sparkLayer) * fade; 
+    
+    // Scan lasers flash brighter when bass hits
+    vec3 scanCol = uScanColor * combinedPulse * (1.0 + audioEnergy * 1.5);
+    vec3 scanAura = uScanColor * combinedAura * (1.0 + audioEnergy * 1.5);
+
+    // Deep space fog that pulses subtly with the music
+    float coreGlow = exp(-dist * 2.0) * audioEnergy * 0.25;
+
+    color = gridCol + scanCol + scanAura + (uScanColor * coreGlow);
 
   float n = fract(sin(dot(gl_FragCoord.xy + vec2(iTime * 123.4), vec2(12.9898,78.233))) * 43758.5453123);
   color += (n - 0.5) * uNoise;
   color = clamp(color, 0.0, 1.0);
+  
   float alpha = clamp(max(lineVis, combinedPulse), 0.0, 1.0);
   float gx = 1.0 - smoothstep(tx * 2.0, tx * 2.0 + aax * 2.0, ax);
   float gy = 1.0 - smoothstep(ty * 2.0, ty * 2.0 + aay * 2.0, ay);
   float halo = max(gx, gy) * fade;
   alpha = max(alpha, halo * clamp(uBloomOpacity, 0.0, 1.0));
+  
   fragColor = vec4(color, alpha);
 }
 
@@ -348,6 +368,17 @@ export const GridScan: React.FC<GridScanProps> = ({
   const [modelsReady, setModelsReady] = useState(false);
   const [uiFaceActive, setUiFaceActive] = useState(false);
 
+  const [isAudioSyncing, setIsAudioSyncing] = useState(false);
+  const isAudioSyncingRef = useRef(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const dataArrayRef = useRef<Uint8Array | null>(null);
+  const beatCooldownRef = useRef(0);
+  
+  const smoothedAudioRef = useRef(0);
+
   const lookTarget = useRef(new THREE.Vector2(0, 0));
   const tiltTarget = useRef(0);
   const yawTarget = useRef(0);
@@ -391,21 +422,65 @@ export const GridScan: React.FC<GridScanProps> = ({
 
   const yBoost = THREE.MathUtils.lerp(1.2, 1.6, s);
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const url = URL.createObjectURL(file);
+
+    if (!audioContextRef.current) {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      audioContextRef.current = new AudioContextClass();
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      analyserRef.current.fftSize = 256; 
+      dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount);
+    }
+
+    if (!audioRef.current) {
+      audioRef.current = new Audio();
+      audioRef.current.crossOrigin = "anonymous";
+      
+      sourceNodeRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
+      sourceNodeRef.current.connect(analyserRef.current!);
+      analyserRef.current!.connect(audioContextRef.current.destination); 
+      
+      audioRef.current.onended = () => {
+        setIsAudioSyncing(false);
+        isAudioSyncingRef.current = false;
+      };
+    }
+
+    audioRef.current.src = url;
+    
+    const playPromise = audioRef.current.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(error => {
+        if (error.name !== 'AbortError') console.error("Audio playback error:", error);
+      });
+    }
+
+    if (audioContextRef.current.state === 'suspended') {
+      audioContextRef.current.resume();
+    }
+
+    setIsAudioSyncing(true);
+    isAudioSyncingRef.current = true;
+  };
+
+  const stopAudio = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current.removeAttribute('src'); 
+      audioRef.current.load();
+    }
+    setIsAudioSyncing(false);
+    isAudioSyncingRef.current = false;
+  };
+
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
-    let leaveTimer: number | null = null;
-    const onMove = (e: MouseEvent) => {
-      if (uiFaceActive) return;
-      if (leaveTimer) {
-        clearTimeout(leaveTimer);
-        leaveTimer = null;
-      }
-      const rect = el.getBoundingClientRect();
-      const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      const ny = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-      lookTarget.current.set(nx, ny);
-    };
+    
     const onClick = async () => {
       const nowSec = performance.now() / 1000;
       if (scanOnClick) pushScan(nowSec);
@@ -420,36 +495,12 @@ export const GridScan: React.FC<GridScanProps> = ({
         } catch {}
       }
     };
-    const onEnter = () => {
-      if (leaveTimer) {
-        clearTimeout(leaveTimer);
-        leaveTimer = null;
-      }
-    };
-    const onLeave = () => {
-      if (uiFaceActive) return;
-      if (leaveTimer) clearTimeout(leaveTimer);
-      leaveTimer = window.setTimeout(
-        () => {
-          lookTarget.current.set(0, 0);
-          tiltTarget.current = 0;
-          yawTarget.current = 0;
-        },
-        Math.max(0, snapBackDelay || 0)
-      );
-    };
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseenter', onEnter);
+    
     if (scanOnClick) el.addEventListener('click', onClick);
-    el.addEventListener('mouseleave', onLeave);
     return () => {
-      el.removeEventListener('mousemove', onMove);
-      el.removeEventListener('mouseenter', onEnter);
-      el.removeEventListener('mouseleave', onLeave);
       if (scanOnClick) el.removeEventListener('click', onClick);
-      if (leaveTimer) clearTimeout(leaveTimer);
     };
-  }, [uiFaceActive, snapBackDelay, scanOnClick, enableGyro]);
+  }, [scanOnClick, enableGyro]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -489,7 +540,8 @@ export const GridScan: React.FC<GridScanProps> = ({
       uScanDelay: { value: scanDelay },
       uScanDirection: { value: scanDirection === 'backward' ? 1 : scanDirection === 'pingpong' ? 2 : 0 },
       uScanStarts: { value: new Array(MAX_SCANS).fill(0) },
-      uScanCount: { value: 0 }
+      uScanCount: { value: 0 },
+      uAudioPulse: { value: 0.0 }
     };
 
     const material = new THREE.ShaderMaterial({
@@ -541,7 +593,6 @@ export const GridScan: React.FC<GridScanProps> = ({
     };
     window.addEventListener('resize', onResize);
 
-    // FPS THROTTLING LOGIC IMPLEMENTED HERE
     let last = performance.now();
     let lastRender = last;
     const fpsInterval = 1000 / 30; // 30 FPS Cap
@@ -552,11 +603,49 @@ export const GridScan: React.FC<GridScanProps> = ({
       const now = performance.now();
       const elapsed = now - lastRender;
 
-      if (elapsed < fpsInterval) return; // Skip frame to maintain 30 FPS
+      if (elapsed < fpsInterval) return; 
       lastRender = now - (elapsed % fpsInterval);
 
       const dt = Math.max(0, Math.min(0.1, (now - last) / 1000));
       last = now;
+
+      let rawPulse = 0;
+      if (analyserRef.current && dataArrayRef.current && isAudioSyncingRef.current) {
+        analyserRef.current.getByteFrequencyData(dataArrayRef.current);
+        
+        let sum = 0;
+        const limit = Math.floor(dataArrayRef.current.length * 0.15); 
+        for(let i = 0; i < limit; i++) {
+            sum += dataArrayRef.current[i];
+        }
+        
+        let rawAvg = (sum / limit) / 255.0; 
+        rawPulse = Math.pow(rawAvg, 2.0); 
+      }
+
+      if (rawPulse > smoothedAudioRef.current) {
+          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, 0.85); 
+      } else {
+          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, 0.15); 
+      }
+
+      const audioPulse = smoothedAudioRef.current;
+      material.uniforms.uAudioPulse.value = audioPulse;
+
+      if (bloomRef.current) {
+          bloomRef.current.blendMode.opacity.value = Math.max(0, bloomIntensity) + (audioPulse * 0.5);
+      }
+
+      if (chromaRef.current) {
+          const baseAberration = chromaticAberration || 0.002;
+          const distortedAberration = baseAberration + (audioPulse * 0.015); 
+          chromaRef.current.offset.set(distortedAberration, distortedAberration);
+      }
+
+      if (rawPulse > 0.65 && now - beatCooldownRef.current > 500) {
+          pushScan(now / 1000);
+          beatCooldownRef.current = now; 
+      }
 
       smoothDampVec2(lookCurrent.current, lookTarget.current, lookVel.current, smoothTime, maxSpeed, dt);
 
@@ -608,6 +697,14 @@ export const GridScan: React.FC<GridScanProps> = ({
       renderer.dispose();
       renderer.forceContextLoss();
       container.removeChild(renderer.domElement);
+      
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.src = "";
+      }
+      if (audioContextRef.current) {
+          audioContextRef.current.close();
+      }
     };
   }, [
     sensitivity,
@@ -812,9 +909,39 @@ export const GridScan: React.FC<GridScanProps> = ({
   }, [enableWebcam, modelsReady, depthResponse]);
 
   return (
-    <div ref={containerRef} className={`relative w-full h-full overflow-hidden ${className ?? ''}`} style={style}>
+    <div ref={containerRef} className={`relative w-full h-full overflow-hidden pointer-events-auto ${className ?? ''}`} style={style}>
+      
+      <div className="absolute bottom-6 right-6 z-50 flex gap-4">
+        {isAudioSyncing ? (
+          <button 
+            onClick={stopAudio}
+            className="bg-white/5 backdrop-blur-md border border-white/10 text-slate-300 px-5 py-2.5 rounded-full text-[10px] font-bold font-mono tracking-[0.2em] flex items-center gap-3 hover:bg-white hover:text-black transition-all"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+            STOP AUDIO
+          </button>
+        ) : (
+          <>
+            <input 
+              type="file" 
+              id="audio-upload" 
+              accept="audio/*" 
+              className="hidden" 
+              onChange={handleFileUpload} 
+            />
+            <label 
+              htmlFor="audio-upload"
+              className="cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 text-slate-300 px-5 py-2.5 rounded-full text-[10px] font-bold font-mono tracking-[0.2em] flex items-center gap-3 hover:bg-white hover:text-black transition-all"
+            >
+              <span className="material-symbols-outlined text-[14px]">music_note</span>
+              SYNC AUDIO
+            </label>
+          </>
+        )}
+      </div>
+
       {showPreview && (
-        <div className="right-3 bottom-3 absolute bg-black shadow-[0_4px_16px_rgba(0,0,0,0.4)] border border-white/25 rounded-lg w-[220px] h-[132px] overflow-hidden font-sans text-[12px] text-white leading-[1.2] pointer-events-none">
+        <div className="right-3 bottom-20 absolute bg-black shadow-[0_4px_16px_rgba(0,0,0,0.4)] border border-white/25 rounded-lg w-[220px] h-[132px] overflow-hidden font-sans text-[12px] text-white leading-[1.2] pointer-events-none">
           <video ref={videoRef} muted playsInline autoPlay className="w-full h-full object-cover -scale-x-100" />
           <div className="top-2 left-2 absolute bg-black/50 backdrop-blur-[4px] px-[6px] py-[2px] rounded-[6px]">
             {enableWebcam
