@@ -220,7 +220,7 @@ export default function ResumePage() {
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-[10px] bg-primary text-black px-2 py-0.5 font-bold">OCT' 25</span>
-                        <TransitionLink href="https://github.com/jainamjyoat/Plant-Phenology-State-Detector" className="text-primary text-[10px] font-bold underline">
+                        <TransitionLink href="./archive" className="text-primary text-[10px] font-bold underline">
                           VIEW ARCHIVE
                         </TransitionLink>
                       </div>
@@ -248,7 +248,7 @@ export default function ResumePage() {
                     <div>
                       <div className="flex items-center gap-3 mb-2">
                         <span className="text-[10px] bg-primary text-black px-2 py-0.5 font-bold">OCT' 25</span>
-                        <TransitionLink href="https://github.com/jainamjyoat/ai-marketplace-assistant" className="text-primary text-[10px] font-bold underline">
+                        <TransitionLink href="./archive" className="text-primary text-[10px] font-bold underline">
                           VIEW ARCHIVE
                         </TransitionLink>
                       </div>

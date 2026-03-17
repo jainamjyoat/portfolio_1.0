@@ -4,7 +4,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
 export default function Preloader() {
+  // If the site already booted in this session, skip the preloader entirely
   const [progress, setProgress] = useState(0);
+  const [shouldRender, setShouldRender] = useState<boolean>(() => {
+    try {
+      return !sessionStorage.getItem('siteBooted');
+    } catch (e) {
+      return true;
+    }
+  });
   
   const containerRef = useRef<HTMLDivElement>(null);
   const layer1Ref = useRef<HTMLDivElement>(null); 
@@ -13,6 +21,13 @@ export default function Preloader() {
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!shouldRender) return; // Don't run the boot sequence if we've already booted
+
+    // mark site as booted so subsequent navigations won't show the preloader
+    try {
+      sessionStorage.setItem('siteBooted', '1');
+    } catch (e) {}
+
     document.body.style.overflow = 'hidden';
 
     let currentProgress = 0;
@@ -29,6 +44,7 @@ export default function Preloader() {
             onComplete: () => {
               document.body.style.overflow = ''; 
               if (containerRef.current) containerRef.current.style.display = 'none'; 
+              setShouldRender(false);
             }
           });
 
@@ -68,7 +84,9 @@ export default function Preloader() {
     }, 80);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [shouldRender]);
+
+  if (!shouldRender) return null;
 
   const barLength = 20;
   const filledLength = Math.floor((progress / 100) * barLength);
