@@ -8,23 +8,27 @@ import { gsap } from 'gsap';
 interface TransitionLinkProps extends LinkProps {
   children: React.ReactNode;
   className?: string;
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 }
 
-export default function TransitionLink({ children, href, className, ...props }: TransitionLinkProps) {
+export default function TransitionLink({ children, href, className, onClick, ...props }: TransitionLinkProps) {
   const router = useRouter();
 
   const handleTransition = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
 
-    // --- THE FIX: Make the URL checking bulletproof ---
-    const hrefString = href.toString();
+    if (onClick) {
+      onClick(e);
+    }
+
+    const hrefString = href.toString().toLowerCase();
     let destText = "SYSTEM_NAV_";
     
     if (hrefString === '/' || hrefString.startsWith('/#')) {
       destText = "HOME_ENVIRONMENT_";
-    } else if (hrefString.includes('/archive')) {
+    } else if (hrefString.includes('archive')) {
       destText = "ARCHIVE_INDEX_";
-    } else if (hrefString.includes('/resume')) {
+    } else if (hrefString.includes('resume')) {
       destText = "PROFESSIONAL_DOSSIER_";
     }
 
@@ -67,25 +71,19 @@ export default function TransitionLink({ children, href, className, ...props }: 
       onComplete: () => container.remove() 
     });
 
-    // --- PHASE 1: ENTER SEQUENCE ---
     tl.to(layer1, { yPercent: 0, duration: 0.6, ease: "expo.inOut" })
       .to(layer2, { yPercent: 0, duration: 0.6, ease: "expo.inOut" }, "-=0.45") 
       .to(layer3, { yPercent: 0, duration: 0.6, ease: "expo.inOut" }, "-=0.45")
       .to(textNode, { yPercent: 0, duration: 0.5, ease: "expo.out" }, "-=0.2")
       .to(subTextNode, { yPercent: 0, duration: 0.5, ease: "expo.out" }, "-=0.4")
-      
-      // --- PHASE 2: THE CPU HANDOFF ---
       .add(() => {
         tl.pause(); 
         router.push(href.toString());
         window.scrollTo(0, 0); 
-
         setTimeout(() => {
           tl.play(); 
         }, 800);
       })
-
-      // --- PHASE 3: EXIT SEQUENCE ---
       .to([textNode, subTextNode], { yPercent: -100, duration: 0.4, ease: "expo.in" })
       .to(layer3, { yPercent: -100, duration: 0.6, ease: "expo.inOut" }, "-=0.1")
       .to(layer2, { yPercent: -100, duration: 0.6, ease: "expo.inOut" }, "-=0.45")

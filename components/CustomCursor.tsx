@@ -5,12 +5,19 @@ import { gsap } from 'gsap';
 import { usePathname } from 'next/navigation'; // Added to track page changes
 
 export default function CustomCursor() {
+  const [mounted, setMounted] = React.useState(false);
   const cursorDot = useRef<HTMLDivElement>(null);
   const cursorRing = useRef<HTMLDivElement>(null);
   const pathname = usePathname(); // Get the current URL path
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   // 1. Handle actual mouse movement (Only needs to run once)
   useEffect(() => {
+    if (!mounted) return;
+
     document.body.style.cursor = 'none';
 
     const xMoveDot = gsap.quickTo(cursorDot.current, "x", { duration: 0.1, ease: "power3" });
@@ -31,10 +38,12 @@ export default function CustomCursor() {
       window.removeEventListener("mousemove", moveCursor);
       document.body.style.cursor = 'auto';
     };
-  }, []);
+  }, [mounted]);
 
   // 2. Handle hover states & page transitions (Runs every time the URL changes)
   useEffect(() => {
+    if (!mounted) return;
+
     // FORCE RESET: When the page changes, instantly shrink the cursor back to normal
     gsap.to(cursorRing.current, { scale: 1, backgroundColor: "transparent", duration: 0.3 });
     gsap.to(cursorDot.current, { scale: 1, duration: 0.3 });
@@ -68,7 +77,9 @@ export default function CustomCursor() {
         el.removeEventListener("mouseleave", handleLeave);
       });
     };
-  }, [pathname]); // <--- This dependency is the magic fix!
+  }, [pathname, mounted]); // <--- This dependency is the magic fix!
+
+  if (!mounted) return null;
 
   return (
     <>

@@ -10,7 +10,6 @@ import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
 import TransitionLink from '@/components/TransitionLink';
 
-
 // Ensure GSAP knows about ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,6 +53,8 @@ export default function Portfolio() {
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold tracking-tighter uppercase font-display text-primary">Jainam Jyoat</span>
           </div>
+          
+          {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-12 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             <a className="hover:text-primary transition-colors" href="#about">About</a>
             <a className="hover:text-primary transition-colors" href="#projects">Projects</a>
@@ -61,9 +62,9 @@ export default function Portfolio() {
             <a className="hover:text-primary transition-colors" href="#achievements">Achievements</a>
             <a className="px-6 py-2 bg-primary text-black hover:bg-white transition-all" href="#contact">Contact</a>
           </div>
-          <button className="md:hidden text-white">
-            <span className="material-symbols-outlined">menu</span>
-          </button>
+          
+          {/* NOTE: The old generic mobile button was removed from here! 
+              Your new <MobileMenu /> from layout.tsx is now handling this! */}
         </div>
       </nav>
 
@@ -107,12 +108,47 @@ export default function Portfolio() {
               >
                 View Projects <span className="material-symbols-outlined text-base">arrow_forward</span>
               </TransitionLink>
-              <a className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" href="https://github.com/jainamjyoat" title="GitHub">
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"></path></svg>
-              </a>
-              <a className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" href="https://www.linkedin.com/in/jainam-jyoat/" title="LinkedIn">
-                <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
-              </a>
+              
+              {/* Social Links Grid */}
+              <div className="flex gap-4">
+                {/* GitHub Button */}
+                <a 
+                  className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" 
+                  href="https://github.com/jainamjyoat" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  title="GitHub"
+                >
+                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                  </svg>
+                </a>
+
+                {/* LinkedIn Button */}
+                <a 
+                  className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" 
+                  href="https://www.linkedin.com/in/jainam-jyoat/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  title="LinkedIn"
+                >
+                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                  </svg>
+                </a>
+
+                {/* Google Cloud Button */}
+                <a 
+                  className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" 
+                  href="https://cloud.google.com/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  title="Google Cloud"
+                >
+                  <span className="material-symbols-outlined text-[20px]">cloud</span>
+                </a>
+              </div>
+              
               <TransitionLink 
                 href="/resume"
                 className="px-8 py-4 h-12 border border-white/20 text-white font-bold uppercase tracking-widest text-xs hover:bg-white/10 transition-colors flex items-center justify-center"
@@ -138,8 +174,6 @@ export default function Portfolio() {
           </div>
         </div>
       </section>
-
-     
 
       {/* About Section */}
       <section className="py-32 border-t border-white/5 relative overflow-hidden bg-background-dark/95" id="about">
@@ -207,7 +241,6 @@ export default function Portfolio() {
               <div className="grid md:grid-cols-12 gap-12 items-center">
                 <div className="md:col-span-2 text-6xl md:text-8xl font-black text-white/5 font-display group-hover:text-primary/10 transition-colors">01</div>
                 <div className="md:col-span-5">
-                  {/* Freelance / Commercial Tags */}
                   <div className="flex gap-4 mb-4">
                     <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs">Freelance</span>
                     <span className="text-slate-500 font-bold tracking-[0.2em] uppercase text-xs">Commercial</span>
@@ -227,7 +260,6 @@ export default function Portfolio() {
                 </div>
                 <div className="md:col-span-5 relative">
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                    {/* Update this src to a screenshot of the Varanasi Tours website! */}
                     <img alt="Varanasi Tours website preview" className="w-full h-full object-cover" src="./VTI 1.webp" loading="lazy" />
                   </div>
                   <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="https://varanasitoursindia.com" target="_blank" rel="noopener noreferrer">

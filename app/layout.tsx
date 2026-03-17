@@ -5,6 +5,7 @@ import "./globals.css";
 // 1. IMPORT YOUR NEW PREMIUM COMPONENTS
 import Preloader from "@/components/Preloader";
 import CustomCursor from "@/components/CustomCursor";
+import MobileMenu from "@/components/MobileMenu"; // <-- ADDED THIS!
 
 
 const geistSans = Geist({
@@ -41,9 +42,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background-dark`}
       >
         {/* 3. ADD THE COMPONENTS HERE SO THEY RUN ON EVERY PAGE */}
-       
+        
         <Preloader />
         <CustomCursor />
+        <MobileMenu /> {/* <-- AND DROPPED IT RIGHT HERE! */}
         
         {children}
         
