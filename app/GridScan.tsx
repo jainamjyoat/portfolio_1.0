@@ -38,6 +38,11 @@ type GridScanProps = {
   snapBackDelay?: number;
   className?: string;
   style?: React.CSSProperties;
+
+  // New audio props
+  fftSize?: number;
+  audioSmoothRise?: number; // smoothing when pulse rises (0..1)
+  audioSmoothFall?: number; // smoothing when pulse falls (0..1)
 };
 
 const vert = `
@@ -353,7 +358,12 @@ export const GridScan: React.FC<GridScanProps> = ({
   scanOnClick = false,
   snapBackDelay = 250,
   className,
-  style
+  style,
+
+  // New audio defaults
+  fftSize = 256,
+  audioSmoothRise = 0.85,
+  audioSmoothFall = 0.15
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -376,6 +386,7 @@ export const GridScan: React.FC<GridScanProps> = ({
   const analyserRef = useRef<AnalyserNode | null>(null);
   const dataArrayRef = useRef<Uint8Array | null>(null);
   const beatCooldownRef = useRef(0);
+  const audioWarnedRef = useRef(false);
   
   const smoothedAudioRef = useRef(0);
 
@@ -407,6 +418,40 @@ export const GridScan: React.FC<GridScanProps> = ({
     }
   };
 
+  // Ensure audio context, analyser and data buffer are initialized
+  const ensureAudioSetup = () => {
+    if (!audioContextRef.current) {
+      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      audioContextRef.current = new AudioContextClass();
+    }
+
+    if (!analyserRef.current && audioContextRef.current) {
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      analyserRef.current.fftSize = Math.max(32, Math.min(16384, Math.floor(fftSize)));
+      dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount);
+      // reset warned flag when analyser becomes available
+      audioWarnedRef.current = false;
+    } else if (analyserRef.current) {
+      const desired = Math.max(32, Math.min(16384, Math.floor(fftSize)));
+      if (analyserRef.current.fftSize !== desired) {
+        analyserRef.current.fftSize = desired;
+        dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount);
+      }
+    }
+
+    // if audio element and context exist but source node missing, connect it
+    if (audioContextRef.current && audioRef.current && !sourceNodeRef.current) {
+      try {
+        sourceNodeRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
+        sourceNodeRef.current.connect(analyserRef.current!);
+        analyserRef.current!.connect(audioContextRef.current.destination);
+      } catch (err) {
+        // createMediaElementSource can throw if audio element crossOrigin restrictions apply
+        console.warn('Failed to create media source node for audio element:', err);
+      }
+    }
+  };
+
   const bufX = useRef<number[]>([]);
   const bufY = useRef<number[]>([]);
   const bufT = useRef<number[]>([]);
@@ -428,38 +473,34 @@ export const GridScan: React.FC<GridScanProps> = ({
 
     const url = URL.createObjectURL(file);
 
-    if (!audioContextRef.current) {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      audioContextRef.current = new AudioContextClass();
-      analyserRef.current = audioContextRef.current.createAnalyser();
-      analyserRef.current.fftSize = 256; 
-      dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount);
-    }
+    // Ensure audio context + analyser exist (and sized correctly)
+    ensureAudioSetup();
 
     if (!audioRef.current) {
       audioRef.current = new Audio();
       audioRef.current.crossOrigin = "anonymous";
-      
-      sourceNodeRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
-      sourceNodeRef.current.connect(analyserRef.current!);
-      analyserRef.current!.connect(audioContextRef.current.destination); 
-      
+
       audioRef.current.onended = () => {
         setIsAudioSyncing(false);
         isAudioSyncingRef.current = false;
       };
     }
 
-    audioRef.current.src = url;
-    
-    const playPromise = audioRef.current.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(error => {
-        if (error.name !== 'AbortError') console.error("Audio playback error:", error);
-      });
+    // connect source node if missing
+    ensureAudioSetup();
+
+    if (audioRef.current) {
+      audioRef.current.src = url;
+
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(error => {
+          if (error.name !== 'AbortError') console.error("Audio playback error:", error);
+        });
+      }
     }
 
-    if (audioContextRef.current.state === 'suspended') {
+    if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
       audioContextRef.current.resume();
     }
 
@@ -610,23 +651,64 @@ export const GridScan: React.FC<GridScanProps> = ({
       last = now;
 
       let rawPulse = 0;
-      if (analyserRef.current && dataArrayRef.current && isAudioSyncingRef.current) {
-        analyserRef.current.getByteFrequencyData(dataArrayRef.current);
-        
-        let sum = 0;
-        const limit = Math.floor(dataArrayRef.current.length * 0.15); 
-        for(let i = 0; i < limit; i++) {
-            sum += dataArrayRef.current[i];
+      
+      const analyser = analyserRef.current;
+      
+      // Ensure analyser exists and is ready
+      if (isAudioSyncingRef.current && !analyser) {
+        if (!audioWarnedRef.current) {
+          console.warn('Audio sync requested but analyser not initialized. Call ensureAudioSetup() before syncing.');
+          audioWarnedRef.current = true;
         }
-        
-        let rawAvg = (sum / limit) / 255.0; 
-        rawPulse = Math.pow(rawAvg, 2.0); 
       }
 
+      if (analyser && isAudioSyncingRef.current) {
+
+        // Always sync dataArray size with analyser
+        if (!dataArrayRef.current || dataArrayRef.current.length !== analyser.frequencyBinCount) {
+          dataArrayRef.current = new Uint8Array(analyser.frequencyBinCount);
+        }
+
+        const dataArray = dataArrayRef.current;
+
+        if (analyser && dataArray && dataArray.length > 0) {
+          try {
+            // Use a temporary Uint8Array to avoid typing issues (SharedArrayBuffer vs ArrayBuffer)
+            const tempBuf = new Uint8Array(dataArray.length);
+            (analyser as any).getByteFrequencyData(tempBuf);
+
+            let sum = 0;
+
+            // Prevent limit = 0 bug
+            const limit = Math.max(1, Math.floor(tempBuf.length * 0.15));
+            for (let i = 0; i < limit; i++) {
+              sum += tempBuf[i] || 0;
+            }
+
+            const rawAvg = sum / limit;
+
+            // Safe normalization
+            const normalized = rawAvg / 255 || 0;
+            rawPulse = Math.pow(normalized, 2.0);
+
+            // keep the stored buffer in sync (optional)
+            dataArrayRef.current.set(tempBuf);
+          } catch (err) {
+            if (!audioWarnedRef.current) {
+              console.warn('analyser.getByteFrequencyData failed:', err);
+              audioWarnedRef.current = true;
+            }
+            // analyser failed this frame — leave rawPulse at 0
+          }
+        }
+
+      }
+
+      // Use configurable smoothing values
       if (rawPulse > smoothedAudioRef.current) {
-          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, 0.85); 
+          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, audioSmoothRise); 
       } else {
-          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, 0.15); 
+          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, audioSmoothFall); 
       }
 
       const audioPulse = smoothedAudioRef.current;
@@ -716,7 +798,11 @@ export const GridScan: React.FC<GridScanProps> = ({
     lineStyle,
     lineJitter,
     scanDirection,
-    enablePost
+    enablePost,
+    // audio-related dependencies
+    fftSize,
+    audioSmoothRise,
+    audioSmoothFall
   ]);
 
   useEffect(() => {
