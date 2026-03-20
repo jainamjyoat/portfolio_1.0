@@ -168,7 +168,7 @@ export default function Portfolio() {
               <div className="absolute inset-4 border border-white/10 pointer-events-none"></div>
 
               <div className="w-64 h-64 md:w-80 md:h-80 bg-[#cccccc] flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 relative z-10 p-4">
-                <img alt="Profile photo" className="w-full h-full object-cover" src="./My_photo.webp" loading="eager" />
+                <img alt="Profile photo" className="w-full h-full object-cover" src="./My_photo.png" loading="eager" />
               </div>
             </div>
           </div>
