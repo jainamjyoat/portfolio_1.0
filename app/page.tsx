@@ -274,7 +274,11 @@ export default function Portfolio() {
               <div className="grid md:grid-cols-12 gap-12 items-center">
                 <div className="md:col-span-2 text-6xl md:text-8xl font-black text-white/5 font-display group-hover:text-primary/10 transition-colors">02</div>
                 <div className="md:col-span-5">
-                  <h3 className="text-4xl md:text-5xl font-bold mb-6 font-display group-hover:text-primary transition-colors">NASA Kaalnetra</h3>
+                  <div className="flex gap-4 mb-4">
+                    <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs">NASA Space Apps Challenge</span>
+                    <span className="text-slate-500 font-bold tracking-[0.2em] uppercase text-xs">hackathon</span>
+                  </div>
+                  <h3 className="text-4xl md:text-5xl font-bold mb-6 font-display group-hover:text-primary transition-colors">CALYX</h3>
                   <p className="text-slate-400 text-lg mb-8 font-light">Satellite data visualization tool built for tracking atmospheric changes over time, winner of global recognition.</p>
                   <div className="flex flex-wrap gap-3">
                     <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">JavaScript</span>

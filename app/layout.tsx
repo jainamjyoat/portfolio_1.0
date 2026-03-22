@@ -44,7 +44,7 @@ export default function RootLayout({
         {/* 3. ADD THE COMPONENTS HERE SO THEY RUN ON EVERY PAGE */}
         
         <Preloader />
-        <CustomCursor />
+        {/* <CustomCursor /> */}
         <MobileMenu /> {/* <-- AND DROPPED IT RIGHT HERE! */}
         
         {children}
