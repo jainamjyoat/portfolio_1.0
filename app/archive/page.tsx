@@ -44,6 +44,29 @@ const categories = ["Show All", "AI / ML", "Full-Stack", "Systems Architecture"]
 export default function ArchivePage() {
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>("Show All");
 
+  // --- DYNAMIC IST CLOCK ---
+  const [localTime, setLocalTime] = useState<string>("India / --:-- IST");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      // Format the time specifically for Asia/Kolkata (IST) in 24-hour format
+      const formatter = new Intl.DateTimeFormat('en-IN', {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+      setLocalTime(`India / ${formatter.format(now)} IST`);
+    };
+
+    updateTime(); // Set initial time immediately
+    const intervalId = setInterval(updateTime, 1000); // Update every second
+
+    return () => clearInterval(intervalId); // Cleanup on unmount
+  }, []);
+  // ---------------------------------------------
+
   // --- ADDED LENIS SMOOTH SCROLL + GSAP SYNC ---
   useEffect(() => {
     const lenis = new Lenis({
@@ -88,14 +111,6 @@ export default function ArchivePage() {
           >
             Back to Home
           </TransitionLink>
-          {/* <a 
-            href="/resume" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-primary text-black px-6 py-2 font-bold text-sm uppercase tracking-tighter hover:bg-white transition-all inline-block"
-          >
-            Resume
-          </a> */}
         </div>
       </nav>
 
@@ -233,7 +248,9 @@ export default function ArchivePage() {
         <div className="flex flex-col md:items-end justify-between">
           <div className="text-right">
             <p className="text-slate-500 text-xs uppercase tracking-widest mb-1">Local Time</p>
-            <p className="font-bold text-xl uppercase tracking-tighter">London / 14:42 GMT</p>
+            <p className="font-bold text-xl uppercase tracking-tighter transition-opacity duration-300">
+              {localTime}
+            </p>
           </div>
           <div className="text-slate-600 text-[10px] uppercase tracking-widest mt-8">
             © 2026 DEV_ARCHIVE. All rights reserved. Designed for extreme performance.
