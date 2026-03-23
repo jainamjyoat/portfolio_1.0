@@ -38,11 +38,6 @@ type GridScanProps = {
   snapBackDelay?: number;
   className?: string;
   style?: React.CSSProperties;
-
-  // New audio props
-  fftSize?: number;
-  audioSmoothRise?: number; // smoothing when pulse rises (0..1)
-  audioSmoothFall?: number; // smoothing when pulse falls (0..1)
 };
 
 const vert = `
@@ -75,9 +70,6 @@ uniform float uScanSoftness;
 uniform float uPhaseTaper;
 uniform float uScanDuration;
 uniform float uScanDelay;
-
-// --- AUDIO UNIFORM ---
-uniform float uAudioPulse; 
 
 varying vec2 vUv;
 
@@ -135,7 +127,6 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     vec3 hit = ro + rd * minT;
     float dist = length(hit - ro);
 
-  // NO JITTER: Keeping the grid perfectly stable
   float fx = fract(gridUV.x);
   float fy = fract(gridUV.y);
   float ax = min(fx, 1.0 - fx);
@@ -143,9 +134,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
   float wx = fwidth(gridUV.x);
   float wy = fwidth(gridUV.y);
   
-  // Audio cleanly thickens the lines just slightly on the bass hit
-  float audioEnergy = clamp(uAudioPulse * 1.5, 0.0, 1.0);
-  float halfPx = max(0.0, uLineThickness + (audioEnergy * 0.3)) * 0.5;
+  float halfPx = max(0.0, uLineThickness) * 0.5;
 
   float tx = halfPx * wx;
   float ty = halfPx * wy;
@@ -176,7 +165,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     }
   }
   float primaryMask = max(lineX, lineY);
-  float primaryNodeMask = lineX * lineY; // Intersections
+  float primaryNodeMask = lineX * lineY;
 
   vec2 gridUV2 = (hitIsY > 0.5 ? hit.xz : hit.zy) / gridScale;
   float fx2 = fract(gridUV2.x);
@@ -220,7 +209,7 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
     float edgeGate = 1.0 - smoothstep(gridScale * 0.5, gridScale * 2.0, edgeDist);
     altMask *= edgeGate;
 
-    float altNodeMask = lineX2 * lineY2 * edgeGate; // Intersections
+    float altNodeMask = lineX2 * lineY2 * edgeGate;
 
   float lineMask = max(primaryMask, altMask);
   float nodeMask = max(primaryNodeMask, altNodeMask);
@@ -284,31 +273,12 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
     float lineVis = lineMask;
     
-    // --- HIGH-END LIGHTING PHYSICS ---
-    vec3 hotWhite = vec3(1.0, 1.0, 1.0);
-    
-    // 1. Sonar Rings: Expanding bands of light triggered by bass
-    float sonarRing = sin(dist * 15.0 - iTime * 8.0);
-    float sonarPulse = smoothstep(0.95, 1.0, sonarRing) * audioEnergy * 4.0;
-
-    // 2. Node Sparks: Intersections of the grid flash intensely to the music
-    float nodeSpark = nodeMask * audioEnergy * 3.0;
-
-    // Build the final color by layering the pure light effects
     vec3 baseGrid = uLinesColor * lineVis;
-    vec3 sonarGlowLayer = uScanColor * sonarPulse * lineVis;
-    vec3 sparkLayer = hotWhite * nodeSpark;
+    vec3 gridCol = baseGrid * fade; 
+    vec3 scanCol = uScanColor * combinedPulse;
+    vec3 scanAura = uScanColor * combinedAura;
 
-    vec3 gridCol = (baseGrid + sonarGlowLayer + sparkLayer) * fade; 
-    
-    // Scan lasers flash brighter when bass hits
-    vec3 scanCol = uScanColor * combinedPulse * (1.0 + audioEnergy * 1.5);
-    vec3 scanAura = uScanColor * combinedAura * (1.0 + audioEnergy * 1.5);
-
-    // Deep space fog that pulses subtly with the music
-    float coreGlow = exp(-dist * 2.0) * audioEnergy * 0.25;
-
-    color = gridCol + scanCol + scanAura + (uScanColor * coreGlow);
+    color = gridCol + scanCol + scanAura;
 
   float n = fract(sin(dot(gl_FragCoord.xy + vec2(iTime * 123.4), vec2(12.9898,78.233))) * 43758.5453123);
   color += (n - 0.5) * uNoise;
@@ -358,12 +328,7 @@ export const GridScan: React.FC<GridScanProps> = ({
   scanOnClick = false,
   snapBackDelay = 250,
   className,
-  style,
-
-  // New audio defaults
-  fftSize = 256,
-  audioSmoothRise = 0.85,
-  audioSmoothFall = 0.15
+  style
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -377,18 +342,6 @@ export const GridScan: React.FC<GridScanProps> = ({
 
   const [modelsReady, setModelsReady] = useState(false);
   const [uiFaceActive, setUiFaceActive] = useState(false);
-
-  const [isAudioSyncing, setIsAudioSyncing] = useState(false);
-  const isAudioSyncingRef = useRef(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const dataArrayRef = useRef<Uint8Array | null>(null);
-  const beatCooldownRef = useRef(0);
-  const audioWarnedRef = useRef(false);
-  
-  const smoothedAudioRef = useRef(0);
 
   const lookTarget = useRef(new THREE.Vector2(0, 0));
   const tiltTarget = useRef(0);
@@ -418,40 +371,6 @@ export const GridScan: React.FC<GridScanProps> = ({
     }
   };
 
-  // Ensure audio context, analyser and data buffer are initialized
-  const ensureAudioSetup = () => {
-    if (!audioContextRef.current) {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
-      audioContextRef.current = new AudioContextClass();
-    }
-
-    if (!analyserRef.current && audioContextRef.current) {
-      analyserRef.current = audioContextRef.current.createAnalyser();
-      analyserRef.current.fftSize = Math.max(32, Math.min(16384, Math.floor(fftSize)));
-      dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount);
-      // reset warned flag when analyser becomes available
-      audioWarnedRef.current = false;
-    } else if (analyserRef.current) {
-      const desired = Math.max(32, Math.min(16384, Math.floor(fftSize)));
-      if (analyserRef.current.fftSize !== desired) {
-        analyserRef.current.fftSize = desired;
-        dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount);
-      }
-    }
-
-    // if audio element and context exist but source node missing, connect it
-    if (audioContextRef.current && audioRef.current && !sourceNodeRef.current) {
-      try {
-        sourceNodeRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
-        sourceNodeRef.current.connect(analyserRef.current!);
-        analyserRef.current!.connect(audioContextRef.current.destination);
-      } catch (err) {
-        // createMediaElementSource can throw if audio element crossOrigin restrictions apply
-        console.warn('Failed to create media source node for audio element:', err);
-      }
-    }
-  };
-
   const bufX = useRef<number[]>([]);
   const bufY = useRef<number[]>([]);
   const bufT = useRef<number[]>([]);
@@ -466,57 +385,6 @@ export const GridScan: React.FC<GridScanProps> = ({
   const maxSpeed = Infinity;
 
   const yBoost = THREE.MathUtils.lerp(1.2, 1.6, s);
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const url = URL.createObjectURL(file);
-
-    // Ensure audio context + analyser exist (and sized correctly)
-    ensureAudioSetup();
-
-    if (!audioRef.current) {
-      audioRef.current = new Audio();
-      audioRef.current.crossOrigin = "anonymous";
-
-      audioRef.current.onended = () => {
-        setIsAudioSyncing(false);
-        isAudioSyncingRef.current = false;
-      };
-    }
-
-    // connect source node if missing
-    ensureAudioSetup();
-
-    if (audioRef.current) {
-      audioRef.current.src = url;
-
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(error => {
-          if (error.name !== 'AbortError') console.error("Audio playback error:", error);
-        });
-      }
-    }
-
-    if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
-      audioContextRef.current.resume();
-    }
-
-    setIsAudioSyncing(true);
-    isAudioSyncingRef.current = true;
-  };
-
-  const stopAudio = () => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.removeAttribute('src'); 
-      audioRef.current.load();
-    }
-    setIsAudioSyncing(false);
-    isAudioSyncingRef.current = false;
-  };
 
   useEffect(() => {
     const el = containerRef.current;
@@ -581,8 +449,7 @@ export const GridScan: React.FC<GridScanProps> = ({
       uScanDelay: { value: scanDelay },
       uScanDirection: { value: scanDirection === 'backward' ? 1 : scanDirection === 'pingpong' ? 2 : 0 },
       uScanStarts: { value: new Array(MAX_SCANS).fill(0) },
-      uScanCount: { value: 0 },
-      uAudioPulse: { value: 0.0 }
+      uScanCount: { value: 0 }
     };
 
     const material = new THREE.ShaderMaterial({
@@ -650,85 +517,6 @@ export const GridScan: React.FC<GridScanProps> = ({
       const dt = Math.max(0, Math.min(0.1, (now - last) / 1000));
       last = now;
 
-      let rawPulse = 0;
-      
-      const analyser = analyserRef.current;
-      
-      // Ensure analyser exists and is ready
-      if (isAudioSyncingRef.current && !analyser) {
-        if (!audioWarnedRef.current) {
-          console.warn('Audio sync requested but analyser not initialized. Call ensureAudioSetup() before syncing.');
-          audioWarnedRef.current = true;
-        }
-      }
-
-      if (analyser && isAudioSyncingRef.current) {
-
-        // Always sync dataArray size with analyser
-        if (!dataArrayRef.current || dataArrayRef.current.length !== analyser.frequencyBinCount) {
-          dataArrayRef.current = new Uint8Array(analyser.frequencyBinCount);
-        }
-
-        const dataArray = dataArrayRef.current;
-
-        if (analyser && dataArray && dataArray.length > 0) {
-          try {
-            // Use a temporary Uint8Array to avoid typing issues (SharedArrayBuffer vs ArrayBuffer)
-            const tempBuf = new Uint8Array(dataArray.length);
-            (analyser as any).getByteFrequencyData(tempBuf);
-
-            let sum = 0;
-
-            // Prevent limit = 0 bug
-            const limit = Math.max(1, Math.floor(tempBuf.length * 0.15));
-            for (let i = 0; i < limit; i++) {
-              sum += tempBuf[i] || 0;
-            }
-
-            const rawAvg = sum / limit;
-
-            // Safe normalization
-            const normalized = rawAvg / 255 || 0;
-            rawPulse = Math.pow(normalized, 2.0);
-
-            // keep the stored buffer in sync (optional)
-            dataArrayRef.current.set(tempBuf);
-          } catch (err) {
-            if (!audioWarnedRef.current) {
-              console.warn('analyser.getByteFrequencyData failed:', err);
-              audioWarnedRef.current = true;
-            }
-            // analyser failed this frame — leave rawPulse at 0
-          }
-        }
-
-      }
-
-      // Use configurable smoothing values
-      if (rawPulse > smoothedAudioRef.current) {
-          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, audioSmoothRise); 
-      } else {
-          smoothedAudioRef.current = THREE.MathUtils.lerp(smoothedAudioRef.current, rawPulse, audioSmoothFall); 
-      }
-
-      const audioPulse = smoothedAudioRef.current;
-      material.uniforms.uAudioPulse.value = audioPulse;
-
-      if (bloomRef.current) {
-          bloomRef.current.blendMode.opacity.value = Math.max(0, bloomIntensity) + (audioPulse * 0.5);
-      }
-
-      if (chromaRef.current) {
-          const baseAberration = chromaticAberration || 0.002;
-          const distortedAberration = baseAberration + (audioPulse * 0.015); 
-          chromaRef.current.offset.set(distortedAberration, distortedAberration);
-      }
-
-      if (rawPulse > 0.65 && now - beatCooldownRef.current > 500) {
-          pushScan(now / 1000);
-          beatCooldownRef.current = now; 
-      }
-
       smoothDampVec2(lookCurrent.current, lookTarget.current, lookVel.current, smoothTime, maxSpeed, dt);
 
       const tiltSm = smoothDampFloat(
@@ -779,14 +567,6 @@ export const GridScan: React.FC<GridScanProps> = ({
       renderer.dispose();
       renderer.forceContextLoss();
       container.removeChild(renderer.domElement);
-      
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current.src = "";
-      }
-      if (audioContextRef.current) {
-          audioContextRef.current.close();
-      }
     };
   }, [
     sensitivity,
@@ -799,10 +579,8 @@ export const GridScan: React.FC<GridScanProps> = ({
     lineJitter,
     scanDirection,
     enablePost,
-    // audio-related dependencies
-    fftSize,
-    audioSmoothRise,
-    audioSmoothFall
+    bloomIntensity,
+    chromaticAberration
   ]);
 
   useEffect(() => {
@@ -996,36 +774,6 @@ export const GridScan: React.FC<GridScanProps> = ({
 
   return (
     <div ref={containerRef} className={`relative w-full h-full overflow-hidden pointer-events-auto ${className ?? ''}`} style={style}>
-      
-      <div className="absolute bottom-6 right-6 z-50 flex gap-4">
-        {isAudioSyncing ? (
-          <button 
-            onClick={stopAudio}
-            className="bg-white/5 backdrop-blur-md border border-white/10 text-slate-300 px-5 py-2.5 rounded-full text-[10px] font-bold font-mono tracking-[0.2em] flex items-center gap-3 hover:bg-white hover:text-black transition-all"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
-            STOP AUDIO
-          </button>
-        ) : (
-          <>
-            <input 
-              type="file" 
-              id="audio-upload" 
-              accept="audio/*" 
-              className="hidden" 
-              onChange={handleFileUpload} 
-            />
-            <label 
-              htmlFor="audio-upload"
-              className="cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 text-slate-300 px-5 py-2.5 rounded-full text-[10px] font-bold font-mono tracking-[0.2em] flex items-center gap-3 hover:bg-white hover:text-black transition-all"
-            >
-              <span className="material-symbols-outlined text-[14px]">music_note</span>
-              SYNC AUDIO
-            </label>
-          </>
-        )}
-      </div>
-
       {showPreview && (
         <div className="right-3 bottom-20 absolute bg-black shadow-[0_4px_16px_rgba(0,0,0,0.4)] border border-white/25 rounded-lg w-[220px] h-[132px] overflow-hidden font-sans text-[12px] text-white leading-[1.2] pointer-events-none">
           <video ref={videoRef} muted playsInline autoPlay className="w-full h-full object-cover -scale-x-100" />

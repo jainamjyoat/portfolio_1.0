@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import { GridScan } from '@/app/GridScan';
+import FloatingLines from '@/components/FloatingLines';
 import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
 import TransitionLink from '@/components/TransitionLink';
@@ -14,6 +15,8 @@ import TransitionLink from '@/components/TransitionLink';
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Portfolio() {
+  // --- THE FIX: Changed starting state to 'grid' so it loads first ---
+  const [activeTheme, setActiveTheme] = useState<'grid' | 'lines'>('grid');
   
   // --- ADDED LENIS SMOOTH SCROLL + GSAP SYNC ---
   useEffect(() => {
@@ -62,28 +65,39 @@ export default function Portfolio() {
             <a className="hover:text-primary transition-colors" href="#achievements">Achievements</a>
             <a className="px-6 py-2 bg-primary text-black hover:bg-white transition-all" href="#contact">Contact</a>
           </div>
-          
-          {/* NOTE: The old generic mobile button was removed from here! 
-              Your new <MobileMenu /> from layout.tsx is now handling this! */}
         </div>
       </nav>
 
-      {/* Hero Section (No Scroll Reveal here so it loads instantly) */}
+      {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        {/* OPTIMIZED GridScan Features */}
-        <div className="absolute inset-0 z-0 pointer-events-none">
-          <GridScan
-            sensitivity={0.55}
-            lineThickness={1}
-            linesColor="#392e4e"
-            gridScale={0.1}
-            scanColor="#FFFF00"
-            scanOpacity={0.4}
-            enablePost={true} // Disabled to fix severe lag
-            bloomIntensity={0.6}
-            chromaticAberration={0.002}
-            noiseIntensity={0.01}
-          />
+        
+        {/* --- DYNAMIC BACKGROUND LAYER --- */}
+        <div className="absolute inset-0 z-0">
+          {activeTheme === 'grid' ? (
+            <GridScan
+              sensitivity={0.55}
+              lineThickness={1}
+              linesColor="#392e4e"
+              gridScale={0.1}
+              scanColor="#FFFF00"
+              scanOpacity={0.5}
+              enablePost={true} 
+              bloomIntensity={0.5}
+              chromaticAberration={0.002}
+              noiseIntensity={0.03}
+            />
+          ) : (
+            <FloatingLines 
+              enabledWaves={["top", "middle", "bottom"]}
+              lineCount={5}
+              lineDistance={5}
+              bendRadius={5}
+              bendStrength={-0.5}
+              interactive={true}
+              parallax={true}
+              linesGradient={['#00d2ff', '#3a7bd5', '#8a2be2', '#ff0080']}
+            />
+          )}
         </div>
 
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center w-full relative z-10 pointer-events-auto">
@@ -91,12 +105,12 @@ export default function Portfolio() {
           <div className="pt-10">
             <p className="text-primary font-bold tracking-[0.4em] uppercase text-xs mb-6">Portfolio 2026</p>
             
-            <h1 className="text-7xl md:text-[7.5rem] font-black font-display leading-[0.85] tracking-tighter uppercase mb-8">
+            <h1 className="text-7xl md:text-[7.5rem] font-black font-display leading-[0.85] tracking-tighter uppercase mb-8 pointer-events-none">
               <span className="block text-white">Jainam</span>
               <span className="block stroke-text !text-transparent !opacity-100" style={{ WebkitTextStroke: "2px white" }}>Jyoat</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-slate-400 font-light mb-12 max-w-lg leading-relaxed">
+            <p className="text-lg md:text-xl text-slate-400 font-light mb-12 max-w-lg leading-relaxed pointer-events-none">
               CSE B.Tech Student | Full Stack Developer.<br/>
               Building scalable web applications and exploring the intersection of AI and software engineering.
             </p>
@@ -111,7 +125,6 @@ export default function Portfolio() {
               
               {/* Social Links Grid */}
               <div className="flex gap-4">
-                {/* GitHub Button */}
                 <a 
                   className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" 
                   href="https://github.com/jainamjyoat" 
@@ -124,7 +137,6 @@ export default function Portfolio() {
                   </svg>
                 </a>
 
-                {/* LinkedIn Button */}
                 <a 
                   className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" 
                   href="https://www.linkedin.com/in/jainam-jyoat/" 
@@ -137,7 +149,6 @@ export default function Portfolio() {
                   </svg>
                 </a>
 
-                {/* Google Cloud Button */}
                 <a 
                   className="w-12 h-12 border border-white/20 text-white hover:bg-white/10 transition-colors flex items-center justify-center" 
                   href="https://cloud.google.com/" 
@@ -158,9 +169,9 @@ export default function Portfolio() {
             </div>
           </div>
 
-          {/* Right Side: Profile Image with Brackets */}
-          <div className="flex justify-center md:justify-end">
-            <div className="relative p-8 inline-block">
+          {/* Right Side: Profile Image */}
+          <div className="flex justify-center md:justify-end pointer-events-none">
+            <div className="relative p-8 inline-block pointer-events-auto">
               <div className="absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] border-primary"></div>
               <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] border-primary"></div>
               <div className="absolute top-0 right-0 w-8 h-8 border-t-[1px] border-r-[1px] border-white/20"></div>
@@ -173,6 +184,21 @@ export default function Portfolio() {
             </div>
           </div>
         </div>
+
+        {/* --- THEME TOGGLE BUTTON --- */}
+        {/* Adjusted to bottom-28 right-10 to perfectly stack above the Audio Sync button */}
+        <div className="absolute bottom-8 right-7 z-50 pointer-events-auto">
+          <button 
+            onClick={() => setActiveTheme(prev => prev === 'grid' ? 'lines' : 'grid')}
+            className="group flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 text-slate-300 px-5 py-2.5 rounded-full text-[10px] font-bold font-mono tracking-[0.2em] hover:bg-white hover:text-black transition-all shadow-xl cursor-pointer"
+          >
+            <span className="material-symbols-outlined text-[14px] group-hover:rotate-180 transition-transform duration-500">
+              change_circle
+            </span>
+            SWITCH THEME
+          </button>
+        </div>
+
       </section>
 
       {/* About Section */}
