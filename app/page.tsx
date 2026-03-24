@@ -271,33 +271,139 @@ export default function Portfolio() {
             </div>
           </div>
           
-          <BlockReveal className="grid grid-cols-1 md:grid-cols-4 border border-white/10 bg-background-dark">
+          <BlockReveal className="grid grid-cols-1 md:grid-cols-4 border border-white/10 bg-background-dark">            
+            {/* Full Stack */}
             <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 hover:bg-primary transition-all group cursor-default">
               <span className="material-symbols-outlined text-primary mb-8 block text-4xl group-hover:text-black">code</span>
               <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">Full Stack</h3>
-              <p className="text-sm text-slate-500 group-hover:text-black/70">Modern web technologies and frameworks.</p>
+              <p className="text-sm text-slate-500 group-hover:text-black/70">Building high-performance, scalable web applications with modern frameworks.</p>
             </div>
+            
+            {/* Cyber Security */}
+            <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 hover:bg-primary transition-all group cursor-default">
+              <span className="material-symbols-outlined text-primary mb-8 block text-4xl group-hover:text-black">security</span>
+              <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">Cyber Security</h3>
+              <p className="text-sm text-slate-500 group-hover:text-black/70">Threat analysis, vulnerability assessments, and secure system architecture.</p>
+            </div>
+            
+            {/* AI & Vision */}
             <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 hover:bg-primary transition-all group cursor-default">
               <span className="material-symbols-outlined text-primary mb-8 block text-4xl group-hover:text-black">psychology</span>
-              <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">AI</h3>
-              <p className="text-sm text-slate-500 group-hover:text-black/70">Integrating machine learning into applications.</p>
+              <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">AI & Vision</h3>
+              <p className="text-sm text-slate-500 group-hover:text-black/70">Developing computer vision models and data-driven intelligent systems.</p>
             </div>
-            <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 hover:bg-primary transition-all group cursor-default">
-              <span className="material-symbols-outlined text-primary mb-8 block text-4xl group-hover:text-black">terminal</span>
-              <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">Problem Solving</h3>
-              <p className="text-sm text-slate-500 group-hover:text-black/70">Deep diving into DSA and architecture.</p>
-            </div>
+            
+            {/* Cloud & Systems */}
             <div className="p-12 hover:bg-primary transition-all group cursor-default">
-              <span className="material-symbols-outlined text-primary mb-8 block text-4xl group-hover:text-black">account_tree</span>
-              <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">Open Source</h3>
-              <p className="text-sm text-slate-500 group-hover:text-black/70">Contributing to the global dev community.</p>
+              <span className="material-symbols-outlined text-primary mb-8 block text-4xl group-hover:text-black">cloud</span>
+              <h3 className="text-xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black">Cloud Systems</h3>
+              <p className="text-sm text-slate-500 group-hover:text-black/70">Deploying robust architectures using Google Cloud, Docker, and modern DBs.</p>
             </div>
+            
           </BlockReveal>
         </div>
       </section>
 
+      {/* Experience Section */}
+      <section className="py-32 bg-neutral-slate border-t border-white/5 relative overflow-hidden" id="experience">
+        <div className="watermark absolute -right-20 top-40">CAREER</div>
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          
+          <BlockReveal className="mb-24">
+            <p className="text-primary font-bold tracking-[0.4em] uppercase text-sm mb-4">Journey So Far</p>
+            <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none text-white">
+              Professional<br/><span className="text-primary italic">Experience.</span>
+            </h2>
+          </BlockReveal>
+
+          <div className="space-y-0 border-t border-white/10">
+            
+            {/* Experience 1: UI/UX Intern */}
+            <BlockReveal className="group border-b border-white/10 py-16 hover:bg-white/[0.01] transition-all">
+              <div className="grid md:grid-cols-12 gap-8">
+                <div className="md:col-span-3">
+                  <p className="text-xl font-bold font-display text-primary tracking-tighter uppercase">Jun' 25 — Jul' 25</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-2">Internship</p>
+                </div>
+                
+                <div className="md:col-span-9">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <h3 className="text-3xl md:text-4xl font-bold font-display uppercase group-hover:text-primary transition-colors text-white">UI / UX Intern</h3>
+                    <span className="text-xl text-slate-400 font-light">Sucantis Biotech Pvt. Ltd.</span>
+                  </div>
+                  
+                  <ul className="space-y-4 mb-8 text-slate-400 text-lg font-light list-none">
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Achieved hands-on industry exposure in biotech product design.
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Completed industrial training in wireframing and high-fidelity interface design.
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Developed practical UI/UX skills by conducting user research and prototyping.
+                    </li>
+                  </ul>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    {["Figma", "Adobe XD", "HTML", "CSS", "Javascript", "UI/UX Prototyping", "Wireframing"].map((skill) => (
+                      <span key={skill} className="px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </BlockReveal>
+
+            {/* Experience 2: Cyber Security Intern */}
+            <BlockReveal className="group border-b border-white/10 py-16 hover:bg-white/[0.01] transition-all">
+              <div className="grid md:grid-cols-12 gap-8">
+                <div className="md:col-span-3">
+                  <p className="text-xl font-bold font-display text-primary tracking-tighter uppercase">Mar' 24 — Apr' 24</p>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-2">Internship</p>
+                </div>
+                
+                <div className="md:col-span-9">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <h3 className="text-3xl md:text-4xl font-bold font-display uppercase group-hover:text-primary transition-colors text-white">Cyber Security Intern</h3>
+                    <span className="text-xl text-slate-400 font-light">Threat Prism</span>
+                  </div>
+                  
+                  <ul className="space-y-4 mb-8 text-slate-400 text-lg font-light list-none">
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Gained practical exposure to ethical hacking and penetration testing.
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Completed intensive training covering cybersecurity fundamentals and network defense.
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Advanced foundational skills in vulnerability assessment and threat mitigation.
+                    </li>
+                  </ul>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    {["Kali Linux", "Wireshark", "Metasploit", "Burp Suite", "Nmap", "Python", "Network Security"].map((tool) => (
+                      <span key={tool} className="px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        {tool}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </BlockReveal>
+
+          </div>
+        </div>
+      </section>
+
       {/* Projects Section */}
-      <section className="py-32 bg-neutral-slate border-t border-white/5 relative overflow-hidden" id="projects">
+      <section className="py-32 border-t border-white/5 bg-background-dark relative overflow-hidden" id="projects">
         <div className="watermark absolute -right-40 bottom-20">WORKS</div>
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <BlockReveal className="max-w-2xl mb-24">
@@ -368,12 +474,54 @@ export default function Portfolio() {
                 </div>
               </div>
             </BlockReveal>
+
+            {/* Project 03 - UrbanSwap */}
+            <BlockReveal className="group border-b border-white/10 py-20 transition-all">
+              <div className="grid md:grid-cols-12 gap-12 items-center">
+                <div className="md:col-span-2 text-6xl md:text-8xl font-black text-white/5 font-display group-hover:text-primary/10 transition-colors">03</div>
+                
+                <div className="md:col-span-5">
+                  <div className="flex gap-4 mb-4">
+                    <span className="text-primary font-bold tracking-[0.2em] uppercase text-xs">Innov-a-thon (NIT Rourkela)</span>
+                    <span className="text-slate-500 font-bold tracking-[0.2em] uppercase text-xs">hackathon</span>
+                  </div>
+                  
+                  <h3 className="text-4xl md:text-5xl font-bold mb-6 font-display group-hover:text-primary transition-colors uppercase">UrbanSwap</h3>
+                  
+                  <p className="text-slate-400 text-lg mb-8 font-light leading-relaxed">
+                    An AI-driven marketplace assistant designed for local artisans. It streamlines discovery through intelligent search, context-aware suggestions, and a responsive UI integrated with Vertex AI to enhance user engagement.
+                  </p>
+                  
+                  <div className="flex flex-wrap gap-3">
+                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">React.js</span>
+                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">Flask</span>
+                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">GCP</span>
+                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">Vertex AI</span>
+                  </div>
+                </div>
+
+                <div className="md:col-span-5 relative">
+                  <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
+                    {/* Ensure you have an image named urbanswap.webp in your public folder */}
+                    <img alt="UrbanSwap Project Preview" className="w-full h-full object-cover" src="./urbanswap.webp" loading="lazy" />
+                  </div>
+                  <a 
+                    className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform shadow-xl" 
+                    href="https://ai-marketplace-assistant-162648101104.asia-south1.run.app/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                  >
+                    <span className="material-symbols-outlined text-3xl font-bold">north_east</span>
+                  </a>
+                </div>
+              </div>
+            </BlockReveal>
           </div>
         </div>
       </section>
 
       {/* Technical Skills */}
-      <section className="py-32 border-t border-white/5 bg-background-dark/95" id="skills">
+      <section className="py-32 bg-neutral-slate border-t border-white/5 relative overflow-hidden" id="skills">
         <div className="max-w-7xl mx-auto px-6">
           <BlockReveal className="mb-24">
             <h2 className="text-6xl md:text-8xl font-bold font-display uppercase tracking-tighter leading-none text-white">
@@ -578,10 +726,9 @@ export default function Portfolio() {
             </h2>
           </BlockReveal>
           
-          <BlockReveal className="grid grid-cols-1 md:grid-cols-4 border-t border-white/10 bg-background-dark">
-            
+          <BlockReveal className="grid grid-cols-1 md:grid-cols-4 border-t border-white/10 bg-background-dark">            
             {/* Certificate 1 */}
-            <a href="YOUR_TATA_LINK_HERE" target="_blank" rel="noopener noreferrer" className="block p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer outline-none">
+            <a href="https://drive.google.com/file/d/1SgoUwN8xTi49dMcXtHmXMcKZBI8MDpn0/view" target="_blank" rel="noopener noreferrer" className="block p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer outline-none">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">01</div>
@@ -596,7 +743,7 @@ export default function Portfolio() {
             </a>
 
             {/* Certificate 2 */}
-            <a href="YOUR_GOOGLE_LINK_HERE" target="_blank" rel="noopener noreferrer" className="block p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer outline-none">
+            <a href="https://www.coursera.org/account/accomplishments/verify/KW9MTLFGVKP3?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" target="_blank" rel="noopener noreferrer" className="block p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer outline-none">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">02</div>
@@ -610,13 +757,12 @@ export default function Portfolio() {
               </div>
             </a>
 
-
             {/* Certificate 3 */}
-            <a href="YOUR_GCP_LINK_HERE" target="_blank" rel="noopener noreferrer" className="block p-12 group hover:bg-primary transition-all cursor-pointer outline-none">
+            <a href="https://www.coursera.org/account/accomplishments/verify/JPB9LRB3XJCH" target="_blank" rel="noopener noreferrer" className="block p-12 group hover:bg-primary transition-all cursor-pointer outline-none">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">03</div>
-                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Google Cloud Associate</h3>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Foundations of Cybersecurity</h3>
                   <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Google • 2024</p>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors mt-8">
@@ -625,10 +771,9 @@ export default function Portfolio() {
                 </div>
               </div>
             </a>
-
             
             {/* Certificate 4 */}
-            <a href="YOUR_JPMORGAN_LINK_HERE" target="_blank" rel="noopener noreferrer" className="block p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer outline-none">
+            <a href="https://drive.google.com/file/d/1TVXQBeDVI2i9FCu8iS8hU5JNjSB5iXLL/view" target="_blank" rel="noopener noreferrer" className="block p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer outline-none">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">04</div>
