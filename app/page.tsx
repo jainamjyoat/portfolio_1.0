@@ -226,7 +226,7 @@ export default function Portfolio() {
               <div className="absolute inset-4 border border-white/10 pointer-events-none"></div>
 
               <div className="w-64 h-64 md:w-80 md:h-80 bg-[#cccccc] flex items-center justify-center overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 relative z-10 p-4">
-                <img alt="Profile photo" className="w-full h-full object-cover" src="./My_photo.png" loading="eager" />
+                <img alt="Profile photo" className="w-full h-full object-cover" src="./My_photo.webp" loading="eager" />
               </div>
             </div>
           </div>
@@ -362,7 +362,7 @@ export default function Portfolio() {
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
                     <img alt="Project preview" className="w-full h-full object-cover" src="./CALAYX.webp" loading="lazy" />
                   </div>
-                  <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="#">
+                  <a className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform" href="https://plant-phenology-state-detector.vercel.app/" target="_blank" rel="noopener noreferrer">
                     <span className="material-symbols-outlined text-3xl">arrow_outward</span>
                   </a>
                 </div>
@@ -670,7 +670,7 @@ export default function Portfolio() {
               <BlockReveal className="space-y-8">
                 <a className="flex items-center gap-6 text-slate-300 hover:text-primary transition-colors group" href="mailto:jainamjyoaat2005@gmail.com">
                   <span className="material-symbols-outlined p-5 bg-white/5 group-hover:bg-primary group-hover:text-black transition-colors text-3xl">mail</span>
-                  <span className="text-lg font-bold font-display uppercase tracking-widest">jainamjyoaat2005@gmail.com</span>
+                  <span className="text-lg font-bold font-display uppercase tracking-widest">jainamjyoat2005@gmail.com</span>
                 </a>
                 <a className="flex items-center gap-6 text-slate-300 hover:text-primary transition-colors group" href="https://www.linkedin.com/in/jainam-jyoat/" target="_blank" rel="noopener noreferrer">
                   <div className="p-5 bg-white/5 group-hover:bg-primary group-hover:text-black transition-colors flex items-center justify-center">
@@ -687,7 +687,7 @@ export default function Portfolio() {
               </BlockReveal>
             </div>
             
-            <BlockReveal className="relative p-12 bg-white/[0.02] border border-white/10">
+            <BlockReveal className="relative p-12 bg-white/[0.02] border border-white/10 h-fit">
               <div className="absolute -top-2 -left-2 w-4 h-4 bg-primary"></div>
               <form onSubmit={handleFormSubmit} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
