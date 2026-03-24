@@ -317,12 +317,56 @@ export default function Portfolio() {
           </BlockReveal>
 
           <div className="space-y-0 border-t border-white/10">
+
+            {/* Experience 0: Freelance Full Stack Developer */}
+            <BlockReveal className="group border-b border-white/10 py-16 hover:bg-white/[0.01] transition-all">
+              <div className="grid md:grid-cols-12 gap-8">
+                <div className="md:col-span-3">
+                  <p className="text-xl font-bold font-display text-primary tracking-tighter uppercase">Nov ’25 — Feb '26</p>
+                  <div className="flex flex-col gap-1 mt-2">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80">Independent</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Freelance</span>
+                  </div>
+                </div>
+                
+                <div className="md:col-span-9">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <h3 className="text-3xl md:text-4xl font-bold font-display uppercase group-hover:text-primary transition-colors text-white">Full Stack Developer</h3>
+                    <span className="text-xl text-slate-400 font-light ">Varanasi Tours India.</span>
+                  </div>
+                  
+                  <ul className="space-y-4 mb-8 text-slate-400 text-lg font-light list-none">
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Developed high-performance, mobile-first client websites with a rigorous focus on core web vitals and premium UI/UX.
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Automated professional communication workflows using NodeMailer to handle real-time enquiry responses.
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
+                      Architected centralized lead management systems integrating Firebase for tracking and Google Sheets API for dynamic product listing.
+                    </li>
+                  </ul>
+                  
+                  <div className="flex flex-wrap gap-2">
+                    {["Next.js", "Tailwind CSS", "NodeMailer", "Firebase", "Google Sheets API", "Node.js", "Responsive Design"].map((skill) => (
+                      <span key={skill} className="px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </BlockReveal>
             
             {/* Experience 1: UI/UX Intern */}
             <BlockReveal className="group border-b border-white/10 py-16 hover:bg-white/[0.01] transition-all">
               <div className="grid md:grid-cols-12 gap-8">
                 <div className="md:col-span-3">
                   <p className="text-xl font-bold font-display text-primary tracking-tighter uppercase">Jun' 25 — Jul' 25</p>
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-primary/80">On-site</span>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-2">Internship</p>
                 </div>
                 
@@ -358,7 +402,7 @@ export default function Portfolio() {
               </div>
             </BlockReveal>
 
-            {/* Experience 2: Cyber Security Intern */}
+            {/* Experience 2: Cyber Security Intern
             <BlockReveal className="group border-b border-white/10 py-16 hover:bg-white/[0.01] transition-all">
               <div className="grid md:grid-cols-12 gap-8">
                 <div className="md:col-span-3">
@@ -369,7 +413,7 @@ export default function Portfolio() {
                 <div className="md:col-span-9">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                     <h3 className="text-3xl md:text-4xl font-bold font-display uppercase group-hover:text-primary transition-colors text-white">Cyber Security Intern</h3>
-                    <span className="text-xl text-slate-400 font-light">Threat Prism</span>
+                    <span className="text-xl text-slate-400 font-light">Threat Prism.</span>
                   </div>
                   
                   <ul className="space-y-4 mb-8 text-slate-400 text-lg font-light list-none">
@@ -396,7 +440,7 @@ export default function Portfolio() {
                   </div>
                 </div>
               </div>
-            </BlockReveal>
+            </BlockReveal> */}
 
           </div>
         </div>
@@ -832,62 +876,91 @@ export default function Portfolio() {
               </BlockReveal>
             </div>
             
-            <BlockReveal className="relative p-12 bg-white/[0.02] border border-white/10 h-fit">
-              <div className="absolute -top-2 -left-2 w-4 h-4 bg-primary"></div>
-              <form onSubmit={handleFormSubmit} className="space-y-8">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Name</label>
+            <BlockReveal className="relative p-8 md:p-12 bg-white/[0.02] border border-white/5 backdrop-blur-sm h-fit group/form">
+              {/* Decorative Corner Accents */}
+              <div className="absolute top-0 left-0 w-4 h-4 border-t border-l border-primary/50 group-hover/form:w-8 group-hover/form:h-8 transition-all duration-500"></div>
+              <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-primary/50 group-hover/form:w-8 group-hover/form:h-8 transition-all duration-500"></div>
+
+              <form onSubmit={handleFormSubmit} className="space-y-12">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                  
+                  {/* Name Input Group */}
+                  <div className="relative group/input">
                     <input 
                       name="name" 
                       required 
-                      className="w-full bg-transparent border-b border-white/20 px-0 py-4 focus:outline-none focus:border-primary transition-colors text-white font-display text-lg" 
-                      placeholder="Jainam Jyoat" 
-                      type="text" 
+                      type="text"
+                      placeholder=" "
+                      className="peer w-full bg-transparent border-b border-white/10 py-3 outline-none focus:border-primary transition-all duration-500 text-white font-display text-lg relative z-10"
                     />
+                    <label className="absolute left-0 top-3 text-slate-500 uppercase text-[10px] font-black tracking-[0.3em] transition-all duration-500 pointer-events-none peer-focus:-top-6 peer-focus:text-primary peer-focus:text-[9px] peer-[:not(:placeholder-shown)]:-top-6">
+                      Full Name
+                    </label>
+                    <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-primary transition-all duration-500 peer-focus:w-full"></div>
                   </div>
-                  <div className="space-y-3">
-                    <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Email</label>
+
+                  {/* Email Input Group */}
+                  <div className="relative group/input">
                     <input 
                       name="email" 
                       required 
-                      className="w-full bg-transparent border-b border-white/20 px-0 py-4 focus:outline-none focus:border-primary transition-colors text-white font-display text-lg" 
-                      placeholder="hello@jainam.dev" 
-                      type="email" 
+                      type="email"
+                      placeholder=" "
+                      className="peer w-full bg-transparent border-b border-white/10 py-3 outline-none focus:border-primary transition-all duration-500 text-white font-display text-lg relative z-10"
                     />
+                    <label className="absolute left-0 top-3 text-slate-500 uppercase text-[10px] font-black tracking-[0.3em] transition-all duration-500 pointer-events-none peer-focus:-top-6 peer-focus:text-primary peer-focus:text-[9px] peer-[:not(:placeholder-shown)]:-top-6">
+                      Email Address
+                    </label>
+                    <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-primary transition-all duration-500 peer-focus:w-full"></div>
                   </div>
                 </div>
-                <div className="space-y-3">
-                  <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Message</label>
+
+                {/* Message Input Group */}
+                <div className="relative group/input">
                   <textarea 
                     name="message" 
                     required 
-                    className="w-full bg-transparent border-b border-white/20 px-0 py-4 focus:outline-none focus:border-primary transition-colors resize-none text-white font-display text-lg" 
-                    placeholder="How can I help you?" 
+                    placeholder=" "
                     rows={4}
+                    className="peer w-full bg-transparent border-b border-white/10 py-3 outline-none focus:border-primary transition-all duration-500 text-white font-display text-lg resize-none relative z-10"
                   ></textarea>
+                  <label className="absolute left-0 top-3 text-slate-500 uppercase text-[10px] font-black tracking-[0.3em] transition-all duration-500 pointer-events-none peer-focus:-top-6 peer-focus:text-primary peer-focus:text-[9px] peer-[:not(:placeholder-shown)]:-top-6">
+                    Your Message
+                  </label>
+                  <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-primary transition-all duration-500 peer-focus:w-full"></div>
                 </div>
-                
-                {/* Dynamic Submit Button */}
-                <button 
-                  disabled={formStatus === 'submitting' || formStatus === 'success'}
-                  className={`w-full py-6 font-black uppercase tracking-[0.2em] transition-all duration-300 flex items-center justify-center gap-3 text-sm ${
-                    formStatus === 'success' ? 'bg-green-500 text-black border border-green-500' : 
-                    formStatus === 'error' ? 'bg-red-500 text-white border border-red-500' :
-                    formStatus === 'submitting' ? 'bg-white/20 text-white cursor-wait' :
-                    'bg-primary text-black hover:bg-white'
-                  }`} 
-                  type="submit"
-                >
-                  {formStatus === 'submitting' ? 'Sending...' : 
-                   formStatus === 'success' ? 'Message Sent!' : 
-                   formStatus === 'error' ? 'Error. Try Again.' : 
-                   'Send Message'}
-                   
-                  {formStatus === 'idle' && <span className="material-symbols-outlined">send</span>}
-                  {formStatus === 'success' && <span className="material-symbols-outlined">check_circle</span>}
-                  {formStatus === 'error' && <span className="material-symbols-outlined">error</span>}
-                </button>
+
+                {/* The "Senior" Animated Button */}
+                <div className="relative pt-4">
+                  <button 
+                    disabled={formStatus === 'submitting' || formStatus === 'success'}
+                    className={`group/btn w-full py-6 flex items-center justify-center gap-4 overflow-hidden relative transition-all duration-500 ${
+                      formStatus === 'success' ? 'bg-green-500' : 'bg-primary'
+                    }`} 
+                    type="submit"
+                  >
+                    {/* Button Sliding Background Effect */}
+                    <div className="absolute inset-0 w-0 bg-white transition-all duration-500 group-hover/btn:w-full"></div>
+                    
+                    <span className="relative z-10 font-black uppercase tracking-[0.3em] text-[11px] text-black transition-colors duration-500">
+                      {formStatus === 'submitting' ? 'Transmitting...' : 
+                      formStatus === 'success' ? 'Protocol Success' : 
+                      'Initialize Send'}
+                    </span>
+
+                    <span className={`material-symbols-outlined relative z-10 text-black text-sm transition-transform duration-500 group-hover/btn:translate-x-2 ${
+                      formStatus === 'submitting' ? 'animate-pulse' : ''
+                    }`}>
+                      {formStatus === 'success' ? 'check_circle' : 'arrow_right_alt'}
+                    </span>
+                  </button>
+                  
+                  {/* Visual Feedback text */}
+                  <div className="mt-4 flex justify-between items-center opacity-40">
+                    <span className="text-[8px] font-mono tracking-widest uppercase">Encryption: AES-256</span>
+                    <span className="text-[8px] font-mono tracking-widest uppercase">Status: {formStatus.toUpperCase()}</span>
+                  </div>
+                </div>
               </form>
             </BlockReveal>
           </div>
