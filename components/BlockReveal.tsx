@@ -18,36 +18,37 @@ export default function BlockReveal({ children, className = '' }: BlockRevealPro
     const el = containerRef.current;
     if (!el) return;
 
-    gsap.fromTo(
+    // We store the animation in a variable so we can clean up ONLY this instance
+    const animation = gsap.fromTo(
       el,
       { 
         opacity: 0, 
         y: 50, 
         filter: 'blur(12px)',
-        willChange: 'opacity, transform, filter' // Forces GPU acceleration
       },
       {
         opacity: 1,
         y: 0,
         filter: 'blur(0px)',
-        duration: 1.2,
+        duration: 1.0, // Sped up slightly from 1.2 to 1.0 for a snappier feel
         ease: "power3.out",
         scrollTrigger: {
           trigger: el,
-          start: 'top 85%', // Triggers exactly when the element hits the bottom 15% of your screen
-          toggleActions: 'play none none reverse', // Plays on scroll down, reverses on scroll up
-          // scrub: 1 has been REMOVED to kill the lag
+          start: 'top 95%', // <-- FIX 1: Triggers immediately when it enters the screen
+          toggleActions: 'play none none reverse', 
         }
       }
     );
 
     return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      // <-- FIX 2: We only kill THIS specific trigger, preserving the rest of your site
+      animation.scrollTrigger?.kill();
+      animation.kill();
     };
   }, []);
 
   return (
-    <div ref={containerRef} className={className}>
+    <div ref={containerRef} className={className} style={{ willChange: 'opacity, transform, filter' }}>
       {children}
     </div>
   );

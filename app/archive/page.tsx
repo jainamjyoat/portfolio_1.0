@@ -100,10 +100,10 @@ export default function ArchivePage() {
       
       {/* Navigation */}
       <nav className="border-b border-white/10 px-6 py-6 md:px-12 flex justify-between items-center bg-background-dark sticky top-0 z-50">
-        <div className="flex items-center gap-2 group cursor-pointer">
-          <span className="material-symbols-outlined text-primary text-3xl">terminal</span>
-          <span className="font-display font-bold text-xl tracking-tighter uppercase">Developer.Archive</span>
-        </div>
+        <TransitionLink href="/" className="flex items-center gap-2 group cursor-pointer outline-none">
+          <span className="material-symbols-outlined text-primary text-3xl group-hover:scale-110 transition-transform">terminal</span>
+          <span className="font-display font-bold text-xl tracking-tighter uppercase group-hover:text-primary transition-colors">Developer.Archive</span>
+        </TransitionLink>
         <div className="flex items-center gap-8">
           <TransitionLink 
             className="font-display text-sm font-medium uppercase tracking-widest hover:text-primary transition-colors" 
@@ -141,9 +141,9 @@ export default function ArchivePage() {
                 Selected<br /><span className="text-primary">Works <span className="text-4xl align-top opacity-50">[{projects.length.toString().padStart(2, '0')}]</span></span>
               </h1>
             </div>
-            <div className="max-w-md text-slate-400 text-sm leading-relaxed uppercase tracking-tight pointer-events-auto">
+            {/* <div className="max-w-md text-slate-400 text-sm leading-relaxed uppercase tracking-tight pointer-events-auto">
               A curated collection of technical solutions ranging from deep learning models to large-scale data visualization systems.
-            </div>
+            </div> */}
           </div>
         </section>
 

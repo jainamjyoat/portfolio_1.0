@@ -111,7 +111,7 @@ export default function Portfolio() {
             </h1>
             
             <p className="text-lg md:text-xl text-slate-400 font-light mb-12 max-w-lg leading-relaxed pointer-events-none">
-              CSE B.Tech Student | Full Stack Developer.<br/>
+              Cyber Security | Full Stack Developer.<br/>
               Building scalable web applications and exploring the intersection of AI and software engineering.
             </p>
             
@@ -399,13 +399,13 @@ export default function Portfolio() {
               <div className="space-y-8">
                 <div className="group border-b border-white/10 pb-4">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xl font-bold font-display group-hover:text-primary transition-colors">Google Cloud / AWS</span>
+                    <span className="text-xl font-bold font-display group-hover:text-primary transition-colors">Google Cloud</span>
                     <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Advanced</span>
                   </div>
                 </div>
                 <div className="group border-b border-white/10 pb-4">
                   <div className="flex justify-between items-center mb-1">
-                    <span className="text-xl font-bold font-display group-hover:text-primary transition-colors">PostgreSQL / Mongo</span>
+                    <span className="text-xl font-bold font-display group-hover:text-primary transition-colors"> Mongo</span>
                     <span className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">Advanced</span>
                   </div>
                 </div>
@@ -441,11 +441,37 @@ export default function Portfolio() {
           </BlockReveal>
           
           <div className="border-t border-white/10">
-            {/* Achievement Item 1 */}
-            <BlockReveal className="achievement-row group border-b border-white/10 py-16 transition-all cursor-default hover:bg-white/[0.02]">
-              <div className="flex flex-col md:flex-row gap-12 items-start">
+            
+            {/* Achievement Item 1 - CSE-LPU Achiever Award */}
+            <BlockReveal className="achievement-row group border-b border-white/10 py-16 transition-all cursor-pointer hover:bg-white/[0.02]">
+              <a href="https://www.linkedin.com/feed/update/urn:li:activity:7403129359298928640/?updateEntityUrn=urn%3Ali%3Afs_updateV2%3A%28urn%3Ali%3Aactivity%3A7403129359298928640%2CFEED_DETAIL%2CEMPTY%2CDEFAULT%2Cfalse%29" target="_blank" rel="noopener noreferrer" className="flex flex-col md:flex-row gap-12 items-start w-full outline-none">
                 <div className="achievement-year transition-all duration-300 md:w-1/4 text-7xl md:text-9xl tracking-tighter font-black text-white/5 font-display group-hover:text-primary/10">
-                  '23
+                  '26
+                </div>
+                <div className="flex-1 space-y-6">
+                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <h3 className="achievement-title text-3xl md:text-5xl font-bold text-slate-300 transition-colors duration-300 group-hover:text-primary font-display">
+                      CSE-LPU Achiever Award
+                    </h3>
+                    <span className="px-4 py-1 bg-primary text-black text-[10px] font-black uppercase tracking-widest h-fit w-fit">
+                      Edu Revolution
+                    </span>
+                  </div>
+                  <p className="text-xl text-slate-500 max-w-3xl leading-relaxed group-hover:text-slate-300 transition-colors font-light">
+                    Honored with the prestigious Achiever Award, representing the lived reality of the Edu Revolution. Recognized for exceptional grit, unstoppable ambition, and pushing the definition of academic and technological excellence to new heights.
+                  </p>
+                </div>
+                <div className="md:w-12 flex justify-end">
+                  <span className="material-symbols-outlined text-slate-800 group-hover:text-primary transition-all group-hover:translate-x-2 text-4xl">arrow_outward</span>
+                </div>
+              </a>
+            </BlockReveal>
+
+            {/* Achievement Item 2 - NASA Space Apps */}
+            <BlockReveal className="achievement-row group border-b border-white/10 py-16 transition-all cursor-pointer hover:bg-white/[0.02]">
+              <a href="https://www.spaceappschallenge.org/2025/find-a-team/kaalnetra/" target="_blank" rel="noopener noreferrer" className="flex flex-col md:flex-row gap-12 items-start w-full outline-none">
+                <div className="achievement-year transition-all duration-300 md:w-1/4 text-7xl md:text-9xl tracking-tighter font-black text-white/5 font-display group-hover:text-primary/10">
+                  '25
                 </div>
                 <div className="flex-1 space-y-6">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -453,43 +479,44 @@ export default function Portfolio() {
                       NASA Space Apps Challenge
                     </h3>
                     <span className="px-4 py-1 bg-primary text-black text-[10px] font-black uppercase tracking-widest h-fit w-fit">
-                      Global Nominee
+                      Global Honorable Mention
                     </span>
                   </div>
                   <p className="text-xl text-slate-500 max-w-3xl leading-relaxed group-hover:text-slate-300 transition-colors font-light">
-                    Global nominee for innovative satellite data visualization solutions. Recognized among the top performers globally for transforming complex astronomical data into intuitive visual interfaces.
+                    Awarded Global Honorable Mention (Top 23 out of 11,500+ projects globally) for building an AI Computer Vision system for Plant Phenology State Detection.
                   </p>
                 </div>
                 <div className="md:w-12 flex justify-end">
                   <span className="material-symbols-outlined text-slate-800 group-hover:text-primary transition-all group-hover:translate-x-2 text-4xl">arrow_outward</span>
                 </div>
-              </div>
+              </a>
             </BlockReveal>
 
-            {/* Achievement Item 2 */}
-            <BlockReveal className="achievement-row group border-b border-white/10 py-16 transition-all cursor-default hover:bg-white/[0.02]">
-              <div className="flex flex-col md:flex-row gap-12 items-start">
+            {/* Achievement Item 3 - Innov-a-thon */}
+            <BlockReveal className="achievement-row group border-b border-white/10 py-16 transition-all cursor-pointer hover:bg-white/[0.02]">
+              <a href="https://unstop.com/certificate-preview/7757a769-9abe-4b7c-88c8-099864fbc965" target="_blank" rel="noopener noreferrer" className="flex flex-col md:flex-row gap-12 items-start w-full outline-none">
                 <div className="achievement-year transition-all duration-300 md:w-1/4 text-7xl md:text-9xl tracking-tighter font-black text-white/5 font-display group-hover:text-primary/10">
-                  '22
+                  '25
                 </div>
                 <div className="flex-1 space-y-6">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <h3 className="achievement-title text-3xl md:text-5xl font-bold text-slate-300 transition-colors duration-300 group-hover:text-primary font-display">
-                      HackTheFuture Winner
+                      Innov-a-thon (NIT Rourkela)
                     </h3>
                     <span className="px-4 py-1 bg-primary text-black text-[10px] font-black uppercase tracking-widest h-fit w-fit">
-                      1st Place
+                      Top 100 in India
                     </span>
                   </div>
                   <p className="text-xl text-slate-500 max-w-3xl leading-relaxed group-hover:text-slate-300 transition-colors font-light">
-                    Winner of the 'Best Sustainability Solution' for the Plant Phenology project. Developed a functional MVP within 48 hours that leveraged AI to predict agricultural growth cycles.
+                    Ranked among the Top 100 teams in India for developing the "AI Marketplace Assistant", leveraging AI for smart customer-seller engagement, tailored recommendations, and dynamic marketplace analytics.
                   </p>
                 </div>
                 <div className="md:w-12 flex justify-end">
                   <span className="material-symbols-outlined text-slate-800 group-hover:text-primary transition-all group-hover:translate-x-2 text-4xl">arrow_outward</span>
                 </div>
-              </div>
+              </a>
             </BlockReveal>
+
           </div>
         </div>
       </section>
@@ -505,59 +532,128 @@ export default function Portfolio() {
             </h2>
           </BlockReveal>
           
-          <BlockReveal className="grid grid-cols-1 md:grid-cols-4 border-t border-white/10 bg-background-dark">
-            <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer">
+          <BlockReveal className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-t border-l border-white/10 bg-background-dark">
+            
+            {/* Cert 1 */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">01</div>
-                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Google Cloud Associate</h3>
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Google • 2024</p>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Cybersecurity Analyst</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Tata • Sep 2025</p>
                 </div>
-                <a className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors" href="#">
+                <a href="YOUR_TATA_CERT_LINK_HERE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors w-max outline-none">
                   View Certificate
                   <span className="material-symbols-outlined text-sm">arrow_outward</span>
                 </a>
               </div>
             </div>
-            <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer">
+
+            {/* Cert 2 */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">02</div>
-                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">AWS Certified Cloud Practitioner</h3>
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Amazon Web Services • 2023</p>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Assets, Threats & Vulnerabilities</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Google • Jun 2024</p>
                 </div>
-                <a className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors" href="#">
+                <a href="YOUR_GOOGLE_THREATS_LINK_HERE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors w-max outline-none">
                   View Certificate
                   <span className="material-symbols-outlined text-sm">arrow_outward</span>
                 </a>
               </div>
             </div>
-            <div className="p-12 border-b md:border-b-0 md:border-r border-white/10 group hover:bg-primary transition-all cursor-pointer">
+
+            {/* Cert 3 */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">03</div>
-                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Google Data Analytics</h3>
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Google • 2023</p>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Google Cloud Associate</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Google • 2024</p>
                 </div>
-                <a className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors" href="#">
+                <a href="YOUR_GCP_LINK_HERE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors w-max outline-none">
                   View Certificate
                   <span className="material-symbols-outlined text-sm">arrow_outward</span>
                 </a>
               </div>
             </div>
-            <div className="p-12 group hover:bg-primary transition-all cursor-pointer">
+
+            {/* Cert 4 */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default">
               <div className="flex flex-col h-full justify-between">
                 <div>
                   <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">04</div>
-                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Meta Front-End Developer</h3>
-                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Meta • 2022</p>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Software Engineering Simulation</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">JPMorgan Chase & Co. • Dec 2023</p>
                 </div>
-                <a className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors" href="#">
+                <a href="YOUR_JPMORGAN_LINK_HERE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors w-max outline-none">
                   View Certificate
                   <span className="material-symbols-outlined text-sm">arrow_outward</span>
                 </a>
               </div>
             </div>
+
+            {/* Cert 5 */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default">
+              <div className="flex flex-col h-full justify-between">
+                <div>
+                  <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">05</div>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">AWS Certified Cloud Practitioner</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Amazon Web Services • 2023</p>
+                </div>
+                <a href="YOUR_AWS_PRACTITIONER_LINK_HERE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors w-max outline-none">
+                  View Certificate
+                  <span className="material-symbols-outlined text-sm">arrow_outward</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Cert 6 */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default">
+              <div className="flex flex-col h-full justify-between">
+                <div>
+                  <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">06</div>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Google Data Analytics</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Google • 2023</p>
+                </div>
+                <a href="YOUR_DATA_ANALYTICS_LINK_HERE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors w-max outline-none">
+                  View Certificate
+                  <span className="material-symbols-outlined text-sm">arrow_outward</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Cert 7 */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default">
+              <div className="flex flex-col h-full justify-between">
+                <div>
+                  <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">07</div>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">Meta Front-End Developer</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">Meta • 2022</p>
+                </div>
+                <a href="YOUR_META_LINK_HERE" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] group-hover:text-black transition-colors w-max outline-none">
+                  View Certificate
+                  <span className="material-symbols-outlined text-sm">arrow_outward</span>
+                </a>
+              </div>
+            </div>
+
+            {/* Cert 8 - In Progress */}
+            <div className="p-8 lg:p-12 border-b border-r border-white/10 group hover:bg-primary transition-all cursor-default opacity-80 hover:opacity-100">
+              <div className="flex flex-col h-full justify-between">
+                <div>
+                  <div className="text-4xl font-black text-white/5 font-display group-hover:text-black/10 mb-8 transition-colors">08</div>
+                  <h3 className="text-2xl font-bold mb-4 font-display uppercase tracking-tight group-hover:text-black leading-tight">AWS Certified Solutions Architect</h3>
+                  <p className="text-xs font-bold uppercase tracking-widest text-slate-500 group-hover:text-black/70 mb-8">AWS • In Progress</p>
+                </div>
+                <div className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-500 group-hover:text-black/50 transition-colors w-max">
+                  Anticipated 2026
+                  <span className="material-symbols-outlined text-sm">pending</span>
+                </div>
+              </div>
+            </div>
+
           </BlockReveal>
         </div>
       </section>
