@@ -19,43 +19,47 @@ export default function Portfolio() {
   const [activeTheme, setActiveTheme] = useState<'grid' | 'lines'>('grid');
   
   // --- EMAILJS CONTACT FORM LOGIC ---
+// --- SECURE BACKEND CONTACT FORM LOGIC ---
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
-  const formRef = useRef<HTMLFormElement>(null);
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     
-    if (!formRef.current) return;
-
-    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-
-    // 🔍 SANITY CHECK: Let's see exactly what Next.js is loading
-    console.log("Checking loaded keys:");
-    console.log("Service ID:", serviceId);
-    console.log("Template ID:", templateId);
-    console.log("Public Key:", publicKey);
-
-    if (!serviceId || !templateId || !publicKey) {
-      alert("Missing EmailJS keys! Check your console.");
-      return;
-    }
-
+    // --- THE FIX: Save the form reference BEFORE any 'await' happens ---
+    const formElement = event.currentTarget; 
+    
     setFormStatus('submitting');
+    
+    const formData = new FormData(formElement);
+    const data = Object.fromEntries(formData.entries());
 
     try {
-      await emailjs.sendForm(serviceId, templateId, formRef.current, publicKey);
+      // Hit our secure backend route
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
 
-      setFormStatus('success');
-      formRef.current.reset();
-      setTimeout(() => setFormStatus('idle'), 3000);
-      
-    } catch (error: any) {
-      console.error("🚨 EMAILJS REJECTED THE REQUEST:");
-      console.error("Status:", error?.status);
-      console.error("Text:", error?.text);
-      
+      // Guard against 404 HTML crashes
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Server returned HTML instead of JSON. Check your API route path!");
+      }
+
+      const result = await response.json();
+
+      if (response.ok && result.success) {
+        setFormStatus('success');
+        formElement.reset(); // <-- Use the safely stored variable here!
+        setTimeout(() => setFormStatus('idle'), 3000);
+      } else {
+        console.error("Form Error:", result.message);
+        setFormStatus('error');
+        setTimeout(() => setFormStatus('idle'), 3000);
+      }
+    } catch (error) {
+      console.error("Fetch Error:", error);
       setFormStatus('error');
       setTimeout(() => setFormStatus('idle'), 3000);
     }
@@ -685,7 +689,7 @@ export default function Portfolio() {
             
             <BlockReveal className="relative p-12 bg-white/[0.02] border border-white/10">
               <div className="absolute -top-2 -left-2 w-4 h-4 bg-primary"></div>
-              <form ref={formRef} onSubmit={handleFormSubmit} className="space-y-8">
+              <form onSubmit={handleFormSubmit} className="space-y-8">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div className="space-y-3">
                     <label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Name</label>
