@@ -12,6 +12,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
 import TransitionLink from '@/components/TransitionLink';
 
+
 // Ensure GSAP knows about ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
@@ -107,6 +108,7 @@ export default function Portfolio() {
           {/* Desktop Links */}
           <div className="hidden md:flex items-center gap-12 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
             <a className="hover:text-primary transition-colors" href="#about">About</a>
+            <a className="hover:text-primary transition-colors" href="#experience">Experience</a>
             <a className="hover:text-primary transition-colors" href="#projects">Projects</a>
             <a className="hover:text-primary transition-colors" href="#skills">Skills</a>
             <a className="hover:text-primary transition-colors" href="#achievements">Achievements</a>
@@ -547,7 +549,7 @@ export default function Portfolio() {
                 <div className="md:col-span-5 relative">
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
                     {/* Ensure you have an image named urbanswap.webp in your public folder */}
-                    <img alt="UrbanSwap Project Preview" className="w-full h-full object-cover" src="./urbanswap.webp" loading="lazy" />
+                    <img alt="UrbanSwap Project Preview" className="w-full h-full object-cover" src="./UrbanSwap.webp" loading="lazy" />
                   </div>
                   <a 
                     className="absolute -bottom-6 -right-6 w-20 h-20 bg-primary text-black flex items-center justify-center hover:scale-110 transition-transform shadow-xl" 
@@ -721,7 +723,7 @@ export default function Portfolio() {
                     </span>
                   </div>
                   <p className="text-xl text-slate-500 max-w-3xl leading-relaxed group-hover:text-slate-300 transition-colors font-light">
-                    Awarded Global Honorable Mention (Top 23 out of 11,500+ projects globally) for building an AI Computer Vision system for Plant Phenology State Detection.
+                    Awarded Global Honorable Mention (Top 23 out of 18,500+ projects globally) for building an AI Computer Vision system for Plant Phenology State Detection.
                   </p>
                 </div>
                 <div className="md:w-12 flex justify-end">
