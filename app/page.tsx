@@ -11,6 +11,8 @@ import FloatingLines from '@/components/FloatingLines';
 import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
 import TransitionLink from '@/components/TransitionLink';
+import Ballpit from '@/components/Ballpit';
+
 
 
 // Ensure GSAP knows about ScrollTrigger
@@ -136,16 +138,16 @@ export default function Portfolio() {
               noiseIntensity={0.03}
             />
           ) : (
-            <FloatingLines 
-              enabledWaves={["top", "middle", "bottom"]}
-              lineCount={5}
-              lineDistance={5}
-              bendRadius={5}
-              bendStrength={-0.5}
-              interactive={true}
-              parallax={true}
-              linesGradient={['#00d2ff', '#3a7bd5', '#8a2be2', '#ff0080']}
+          <div className="absolute inset-0 z-0 opacity-60">
+            <Ballpit
+              count={75}
+              gravity={0.02} 
+              friction={0.99}
+              wallBounce={0.95}
+              followCursor={true} 
+              colors={[0xFFFF00, 0x141414, 0x2A2A2A]}
             />
+          </div>
           )}
         </div>
 
