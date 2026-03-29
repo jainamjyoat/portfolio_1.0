@@ -4,25 +4,64 @@ import React, { useEffect, useState, useRef } from 'react';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import emailjs from '@emailjs/browser';
 
+// Import your backgrounds
 import { GridScan } from '@/app/GridScan';
-import FloatingLines from '@/components/FloatingLines';
+import Hyperspeed from '@/components/Hyperspeed';
+import Ballpit from '@/components/Ballpit';
 import ScrollReveal from '@/components/ScrollReveal';
 import BlockReveal from '@/components/BlockReveal';
 import TransitionLink from '@/components/TransitionLink';
-import Ballpit from '@/components/Ballpit';
-
-
 
 // Ensure GSAP knows about ScrollTrigger
 gsap.registerPlugin(ScrollTrigger);
 
+// --- HYPERSPEED MEMOIZED OPTIONS ---
+// We define this OUTSIDE the component so React doesn't recreate the WebGL scene on every render/scroll
+const hyperspeedOptions = {
+  distortion: "xyDistortion",
+  length: 400,
+  roadWidth: 10,
+  islandWidth: 2,
+  lanesPerRoad: 3,
+  fov: 90,
+  fovSpeedUp: 130,
+  speedUp: 3,
+  carLightsFade: 0.4,
+  totalSideLightSticks: 50,
+  lightPairsPerRoadWay: 40,
+  shoulderLinesWidthPercentage: 0.05,
+  brokenLinesWidthPercentage: 0.1,
+  brokenLinesLengthPercentage: 0.5,
+  lightStickWidth: [0.02, 0.05] as [number, number],
+  lightStickHeight: [0.3, 0.7] as [number, number],
+  movingAwaySpeed: [20, 50] as [number, number],
+  movingCloserSpeed: [-150, -230] as [number, number],
+  carLightsLength: [20, 80] as [number, number],
+  carLightsRadius: [0.03, 0.08] as [number, number],
+  carWidthPercentage: [0.1, 0.5] as [number, number],
+  carShiftX: [-0.5, 0.5] as [number, number],
+  carFloorSeparation: [0, 0.1] as [number, number],
+  colors: {
+    roadColor: 0x050505, // Deepest grey/black
+    islandColor: 0x0a0a0a,
+    background: 0x000000,
+    shoulderLines: 0x1a1a1a,
+    brokenLines: 0x1a1a1a,
+    // Headlights (Coming towards you) - Neon Yellows & Crisp Whites
+    rightCars: [0xeaff00, 0xffffff, 0xaaaaaa],
+    // Taillights (Moving away) - Crimson and dark reds
+    leftCars: [0xff102a, 0x8a0011, 0x4a0005],
+    // City sticks - Neon Yellow
+    sticks: 0xeaff00
+  }
+};
+
 export default function Portfolio() {
-  const [activeTheme, setActiveTheme] = useState<'grid' | 'lines'>('grid');
+  // 1. ADDED 3-WAY STATE (Defaults to 'grid')
+  const [activeTheme, setActiveTheme] = useState<'grid' | 'hyperspeed' | 'ballpit'>('grid');
   
-  // --- EMAILJS CONTACT FORM LOGIC ---
-// --- SECURE BACKEND CONTACT FORM LOGIC ---
+  // --- SECURE BACKEND CONTACT FORM LOGIC ---
   const [formStatus, setFormStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
 
   const handleFormSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -101,7 +140,7 @@ export default function Portfolio() {
     <div className="bg-background-dark text-slate-100 font-sans selection:bg-primary selection:text-black">
       
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-background-dark">
+      <nav className="fixed top-0 w-full z-50 border-b border-white/5 bg-background-dark/80 backdrop-blur-md">
         <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold tracking-tighter uppercase font-display text-primary">Jainam Jyoat</span>
@@ -118,13 +157,14 @@ export default function Portfolio() {
           </div>
         </div>
       </nav>
+      
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center pt-20 overflow-hidden">
         
-        {/* --- DYNAMIC BACKGROUND LAYER --- */}
-        <div className="absolute inset-0 z-0">
-          {activeTheme === 'grid' ? (
+        {/* --- 2. DYNAMIC 3-WAY BACKGROUND LAYER --- */}
+        <div className="absolute inset-0 z-0 no-destroy">
+          {activeTheme === 'grid' && (
             <GridScan
               sensitivity={0.55}
               lineThickness={1}
@@ -137,17 +177,23 @@ export default function Portfolio() {
               chromaticAberration={0.002}
               noiseIntensity={0.03}
             />
-          ) : (
-          <div className="absolute inset-0 z-0 opacity-60">
-            <Ballpit
-              count={75}
-              gravity={0.02} 
-              friction={0.99}
-              wallBounce={0.95}
-              followCursor={true} 
-              colors={[0xFFFF00, 0x141414, 0x2A2A2A]}
-            />
-          </div>
+          )}
+          
+          {activeTheme === 'hyperspeed' && (
+            <Hyperspeed effectOptions={hyperspeedOptions} />
+          )}
+          
+          {activeTheme === 'ballpit' && (
+            <div className="absolute inset-0 z-0 opacity-60">
+              <Ballpit
+                count={75}
+                gravity={0.02} 
+                friction={0.99}
+                wallBounce={0.95}
+                followCursor={true} 
+                colors={[0xFFFF00, 0x141414, 0x2A2A2A]}
+              />
+            </div>
           )}
         </div>
 
@@ -236,10 +282,10 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {/* --- THEME TOGGLE BUTTON --- */}
+        {/* --- 3. THEME TOGGLE BUTTON (Cycles through the 3 states) --- */}
         <div className="absolute bottom-8 right-7 z-50 pointer-events-auto">
           <button 
-            onClick={() => setActiveTheme(prev => prev === 'grid' ? 'lines' : 'grid')}
+            onClick={() => setActiveTheme(prev => prev === 'grid' ? 'hyperspeed' : prev === 'hyperspeed' ? 'ballpit' : 'grid')}
             className="group flex items-center gap-3 bg-white/5 backdrop-blur-md border border-white/10 text-slate-300 px-5 py-2.5 rounded-full text-[10px] font-bold font-mono tracking-[0.2em] hover:bg-white hover:text-black transition-all shadow-xl cursor-pointer"
           >
             <span className="material-symbols-outlined text-[14px] group-hover:rotate-180 transition-transform duration-500">
@@ -406,46 +452,6 @@ export default function Portfolio() {
               </div>
             </BlockReveal>
 
-            {/* Experience 2: Cyber Security Intern
-            <BlockReveal className="group border-b border-white/10 py-16 hover:bg-white/[0.01] transition-all">
-              <div className="grid md:grid-cols-12 gap-8">
-                <div className="md:col-span-3">
-                  <p className="text-xl font-bold font-display text-primary tracking-tighter uppercase">Mar' 24 — Apr' 24</p>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mt-2">Internship</p>
-                </div>
-                
-                <div className="md:col-span-9">
-                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
-                    <h3 className="text-3xl md:text-4xl font-bold font-display uppercase group-hover:text-primary transition-colors text-white">Cyber Security Intern</h3>
-                    <span className="text-xl text-slate-400 font-light">Threat Prism.</span>
-                  </div>
-                  
-                  <ul className="space-y-4 mb-8 text-slate-400 text-lg font-light list-none">
-                    <li className="flex items-start gap-4">
-                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
-                      Gained practical exposure to ethical hacking and penetration testing.
-                    </li>
-                    <li className="flex items-start gap-4">
-                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
-                      Completed intensive training covering cybersecurity fundamentals and network defense.
-                    </li>
-                    <li className="flex items-start gap-4">
-                      <span className="text-primary mt-1.5 material-symbols-outlined text-[10px]">circle</span>
-                      Advanced foundational skills in vulnerability assessment and threat mitigation.
-                    </li>
-                  </ul>
-                  
-                  <div className="flex flex-wrap gap-2">
-                    {["Kali Linux", "Wireshark", "Metasploit", "Burp Suite", "Nmap", "Python", "Network Security"].map((tool) => (
-                      <span key={tool} className="px-3 py-1 bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">
-                        {tool}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </BlockReveal> */}
-
           </div>
         </div>
       </section>
@@ -508,7 +514,7 @@ export default function Portfolio() {
                   <p className="text-slate-400 text-lg mb-8 font-light">Satellite data visualization tool built for tracking atmospheric changes over time, winner of global recognition.</p>
                   <div className="flex flex-wrap gap-3">
                     <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">JavaScript</span>
-                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">D3.js</span>
+                    <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">Docker</span>
                     <span className="px-3 py-1 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-slate-500">Node.js</span>
                   </div>
                 </div>
@@ -550,7 +556,6 @@ export default function Portfolio() {
 
                 <div className="md:col-span-5 relative">
                   <div className="aspect-video bg-neutral-slate overflow-hidden border border-white/10 grayscale group-hover:grayscale-0 transition-all duration-500">
-                    {/* Ensure you have an image named urbanswap.webp in your public folder */}
                     <img alt="UrbanSwap Project Preview" className="w-full h-full object-cover" src="./UrbanSwap.webp" loading="lazy" />
                   </div>
                   <a 
