@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FC, useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { BloomEffect, EffectComposer, EffectPass, RenderPass, SMAAEffect, SMAAPreset } from 'postprocessing';
 
@@ -1287,6 +1287,8 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = DEFAULT_EFFECT_OPTION
   const hyperspeed = useRef<HTMLDivElement>(null);
   const appRef = useRef<App | null>(null);
 
+  const [showNotification, setShowNotification] = useState(false);
+
   useEffect(() => {
     if (appRef.current) {
       appRef.current.dispose();
@@ -1302,11 +1304,9 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = DEFAULT_EFFECT_OPTION
     const container = hyperspeed.current;
     if (!container) return;
 
-    // --- OVERRIDING OPTIONS FOR MASSIVE WARP SPEED ---
     const options: HyperspeedOptions = {
       ...defaultOptions,
       ...effectOptions,
-      // FORCE high interactivity limits so it feels instantly fast
       speedUp: 20, 
       fovSpeedUp: 140,
       colors: { ...defaultOptions.colors, ...effectOptions.colors }
@@ -1322,6 +1322,16 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = DEFAULT_EFFECT_OPTION
     myApp.loadAssets().then(() => {
       if (!myApp.disposed) {
         myApp.init();
+        
+        // Trigger notification shortly after initialization
+        setTimeout(() => {
+          setShowNotification(true);
+          
+          // Auto-hide after 5 seconds
+          setTimeout(() => {
+            setShowNotification(false);
+          }, 5000);
+        }, 2000);
       }
     });
 
@@ -1332,8 +1342,57 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = DEFAULT_EFFECT_OPTION
     };
   }, [effectOptions]);
 
-  // NEW: Added pointer-events-auto and cursor styles to guarantee interactivity
-  return <div id="lights" className="absolute inset-0 w-full h-full overflow-hidden pointer-events-auto cursor-crosshair active:cursor-grabbing" ref={hyperspeed}></div>;
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden">
+      {/* The Hyperspeed WebGL Canvas */}
+      <div 
+        id="lights" 
+        className="absolute inset-0 w-full h-full pointer-events-auto cursor-crosshair active:cursor-grabbing z-0" 
+        ref={hyperspeed}
+      />
+
+      {/* --- ELITE HUD NOTIFICATION --- */}
+      <div 
+        className={`absolute top-28 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center justify-center transition-all duration-1000 ease-out ${
+          showNotification ? 'translate-y-0 opacity-100 filter-none' : '-translate-y-8 opacity-0 blur-md'
+        }`}
+      >
+        {/* Outer Glass Casing */}
+        <div className="relative flex items-center gap-5 px-6 py-3 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-2xl rounded-sm overflow-hidden">
+          
+          {/* Animated Scanning Background Line (Subtle Gradient) */}
+          <div className="absolute top-0 left-0 w-[200%] h-full bg-gradient-to-r from-transparent via-[#eaff00]/10 to-transparent animate-[spin_4s_linear_infinite] opacity-50"></div>
+          
+          {/* Left Status Indicator */}
+          <div className="h-full w-[3px] bg-[#eaff00] absolute left-0 top-0 shadow-[0_0_10px_#eaff00]"></div>
+
+          {/* Micro-Radar Reticle */}
+          <div className="relative flex items-center justify-center w-5 h-5 ml-1">
+            <div className="absolute w-full h-full border border-white/20 rounded-full animate-[spin_3s_linear_infinite] border-t-[#eaff00] border-r-[#eaff00]"></div>
+            <div className="w-1.5 h-1.5 bg-[#eaff00] rounded-full animate-pulse shadow-[0_0_8px_#eaff00]"></div>
+          </div>
+
+          {/* Text Layering */}
+          <div className="flex flex-col relative z-10">
+            <span className="text-[#eaff00] font-mono text-[8px] font-bold tracking-[0.4em] uppercase mb-0.5 opacity-90 drop-shadow-[0_0_2px_rgba(234,255,0,0.5)]">
+              Manual Override
+            </span>
+            <span className="text-white font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase">
+              Hold click to engage warp
+            </span>
+          </div>
+
+          {/* Right Decoration Bracket */}
+          <div className="text-white/20 font-mono text-[10px] ml-2 select-none font-black tracking-tighter">
+            [0x9]
+          </div>
+        </div>
+        
+        {/* Bottom connecting line decoration */}
+        <div className={`w-[1px] h-6 bg-gradient-to-b from-white/20 to-transparent transition-all duration-1000 delay-300 ${showNotification ? 'opacity-100' : 'opacity-0'}`}></div>
+      </div>
+    </div>
+  );
 };
 
 export default Hyperspeed;

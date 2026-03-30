@@ -342,6 +342,9 @@ export const GridScan: React.FC<GridScanProps> = ({
 
   const [modelsReady, setModelsReady] = useState(false);
   const [uiFaceActive, setUiFaceActive] = useState(false);
+  
+  // --- NEW: State for the HUD Notification ---
+  const [showNotification, setShowNotification] = useState(false);
 
   const lookTarget = useRef(new THREE.Vector2(0, 0));
   const tiltTarget = useRef(0);
@@ -385,6 +388,66 @@ export const GridScan: React.FC<GridScanProps> = ({
   const maxSpeed = Infinity;
 
   const yBoost = THREE.MathUtils.lerp(1.2, 1.6, s);
+
+  // --- TRIGGER NOTIFICATION ON MOUNT ---
+  useEffect(() => {
+    // Show the notification 2 seconds after the grid loads
+    const showTimer = setTimeout(() => {
+      setShowNotification(true);
+    }, 2000);
+
+    // Hide it 5 seconds later
+    const hideTimer = setTimeout(() => {
+      setShowNotification(false);
+    }, 7000);
+
+    return () => {
+      clearTimeout(showTimer);
+      clearTimeout(hideTimer);
+    };
+  }, []);
+
+  // --- MOUSE INTERACTIVITY EFFECT ---
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    let snapTimeout: NodeJS.Timeout;
+
+    const onPointerMove = (e: PointerEvent) => {
+      if (uiFaceActive || enableGyro) return;
+
+      const rect = el.getBoundingClientRect();
+      const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const ny = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      clearTimeout(snapTimeout);
+
+      lookTarget.current.set(nx, ny);
+      tiltTarget.current = nx * 0.15; 
+      yawTarget.current = -nx * 0.2;  
+    };
+
+    const onPointerLeave = () => {
+      if (uiFaceActive || enableGyro) return;
+
+      snapTimeout = setTimeout(() => {
+        lookTarget.current.set(0, 0);
+        tiltTarget.current = 0;
+        yawTarget.current = 0;
+      }, snapBackDelay);
+    };
+
+    el.addEventListener('pointermove', onPointerMove);
+    el.addEventListener('pointerleave', onPointerLeave);
+
+    return () => {
+      el.removeEventListener('pointermove', onPointerMove);
+      el.removeEventListener('pointerleave', onPointerLeave);
+      clearTimeout(snapTimeout);
+    };
+  }, [uiFaceActive, enableGyro, snapBackDelay]);
+  // ----------------------------------------
 
   useEffect(() => {
     const el = containerRef.current;
@@ -487,7 +550,7 @@ export const GridScan: React.FC<GridScanProps> = ({
         radialModulation: true,
         modulationOffset: 0.0
       });
-      chromaRef.current = chroma;
+      chromaRef.current = chroma; 
 
       const effectPass = new EffectPass(camera, bloom, chroma);
       effectPass.renderToScreen = true;
@@ -773,7 +836,7 @@ export const GridScan: React.FC<GridScanProps> = ({
   }, [enableWebcam, modelsReady, depthResponse]);
 
   return (
-    <div ref={containerRef} className={`relative w-full h-full overflow-hidden pointer-events-auto ${className ?? ''}`} style={style}>
+    <div ref={containerRef} className={`relative w-full h-full overflow-hidden pointer-events-auto cursor-crosshair ${className ?? ''}`} style={style}>
       {showPreview && (
         <div className="right-3 bottom-20 absolute bg-black shadow-[0_4px_16px_rgba(0,0,0,0.4)] border border-white/25 rounded-lg w-[220px] h-[132px] overflow-hidden font-sans text-[12px] text-white leading-[1.2] pointer-events-none">
           <video ref={videoRef} muted playsInline autoPlay className="w-full h-full object-cover -scale-x-100" />
@@ -788,6 +851,47 @@ export const GridScan: React.FC<GridScanProps> = ({
           </div>
         </div>
       )}
+
+      {/* --- ELITE HUD NOTIFICATION FOR GRID --- */}
+      <div 
+        className={`absolute top-28 left-1/2 -translate-x-1/2 z-20 pointer-events-none flex flex-col items-center justify-center transition-all duration-1000 ease-out ${
+          showNotification ? 'translate-y-0 opacity-100 filter-none' : '-translate-y-8 opacity-0 blur-md'
+        }`}
+      >
+        {/* Outer Glass Casing */}
+        <div className="relative flex items-center gap-5 px-6 py-3 bg-white/[0.03] backdrop-blur-xl border border-white/[0.08] shadow-2xl rounded-sm overflow-hidden">
+          
+          {/* Animated Scanning Background Line */}
+          <div className="absolute top-0 left-0 w-[200%] h-full bg-gradient-to-r from-transparent via-[#eaff00]/10 to-transparent animate-[spin_4s_linear_infinite] opacity-50"></div>
+          
+          {/* Left Status Indicator */}
+          <div className="h-full w-[3px] bg-[#eaff00] absolute left-0 top-0 shadow-[0_0_10px_#eaff00]"></div>
+
+          {/* Micro-Radar Reticle */}
+          <div className="relative flex items-center justify-center w-5 h-5 ml-1">
+            <div className="absolute w-full h-full border border-white/20 rounded-full animate-[spin_3s_linear_infinite] border-t-[#eaff00] border-r-[#eaff00]"></div>
+            <div className="w-1.5 h-1.5 bg-[#eaff00] rounded-full animate-pulse shadow-[0_0_8px_#eaff00]"></div>
+          </div>
+
+          {/* Text Layering */}
+          <div className="flex flex-col relative z-10">
+            <span className="text-[#eaff00] font-mono text-[8px] font-bold tracking-[0.4em] uppercase mb-0.5 opacity-90 drop-shadow-[0_0_2px_rgba(234,255,0,0.5)]">
+              Sensor Array Active
+            </span>
+            <span className="text-white font-mono text-[10px] md:text-xs font-bold tracking-[0.2em] uppercase">
+              Move to Rotate • Click to Scan
+            </span>
+          </div>
+
+          {/* Right Decoration Bracket */}
+          <div className="text-white/20 font-mono text-[10px] ml-2 select-none font-black tracking-tighter">
+            [0xA]
+          </div>
+        </div>
+        
+        {/* Bottom connecting line decoration */}
+        <div className={`w-[1px] h-6 bg-gradient-to-b from-white/20 to-transparent transition-all duration-1000 delay-300 ${showNotification ? 'opacity-100' : 'opacity-0'}`}></div>
+      </div>
     </div>
   );
 };
