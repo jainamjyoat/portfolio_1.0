@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+#  Jainam Jyoat
+### Cyber Security Analyst | Full Stack Developer
 
-## Getting Started
+Passionate developer focused on creating clean, efficient, and secure user-centric solutions. Currently pursuing my B.Tech in Computer Science Engineering at Lovely Professional University. I specialize in bridging the gap between robust back-end logic, secure system architecture, and highly immersive front-end experiences.
 
-First, run the development server:
+When I'm not writing code, you can find me customizing my Arch Linux (Hyprland) setup, exploring JDM car culture, or studying the spiritual heritage of Indian cities like Varanasi.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+##  Technical Mastery
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### **Development Stack**
+* **Languages:** Python, JavaScript/TypeScript, C++
+* **Frontend:** React.js, Next.js, Tailwind CSS
+* **Backend:** Node.js, Express.js, Flask
+* **Database & Cloud:** MongoDB, Google Cloud Platform (GCP), Firebase
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### **Security & Systems**
+* **OS:** Advanced Linux (Arch Linux / Caelestia)
+* **DevOps:** Git, Docker
+* **Cyber Security:** Penetration Testing, Vulnerability Assessments, Threat Analysis
+* **Tools:** Kali Linux, Wireshark, Metasploit, Burp Suite
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+##  Featured Projects
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### **[Varanasi Tours India](https://varanasitoursindia.com)** *(Freelance / Commercial)*
+A high-performance, mobile-first commercial tourism platform designed to showcase the spiritual ghats and cultural heritage of Varanasi.
+* **Tech:** Next.js, React, Tailwind CSS, NodeMailer, Firebase, Google Sheets API.
+* **Highlight:** Architected a centralized lead management system and automated real-time enquiry responses.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### **CALYX (KaalNetra)** *(Hackathon)*
+An AI-powered computer vision system built to track atmospheric changes and predict plant phenology using satellite data.
+* **Tech:** JavaScript, Node.js, Docker.
+* **Award:**  **Global Honorable Mention** (Top 23 of 18,500+ projects) at the NASA Space Apps Challenge 2025.
 
-## Deploy on Vercel
+### **UrbanSwap** *(Hackathon)*
+An AI-driven marketplace assistant designed for local artisans, featuring intelligent search and context-aware suggestions.
+* **Tech:** React.js, Flask, GCP, Vertex AI.
+* **Award:** 🏆 **Top 100 in India** at Innov-a-thon 2025 (NIT Rourkela).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+##  Milestones & Certifications
+
+* **CSE-LPU Achiever Award (2026):** Recognized for exceptional grit and pushing the definition of academic and technological excellence.
+* **Cybersecurity Analyst:** Tata (Sep 2025)
+* **Assets, Threats & Vulnerabilities:** Google (Jun 2024)
+* **Foundations of Cybersecurity:** Google (2024)
+* **Software Engineering Simulation:** JPMorgan Chase & Co. (Dec 2023)
+
+---
