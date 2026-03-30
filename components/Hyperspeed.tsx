@@ -497,7 +497,6 @@ const carLightsVertex = `
   }
 `;
 
-// FIX: Added aOffsetX so we can push sticks deeply into the sides of the screen
 const sideSticksVertex = `
   #define USE_FOG;
   ${THREE.ShaderChunk['fog_pars_vertex']}
@@ -510,7 +509,7 @@ const sideSticksVertex = `
   varying vec3 vColor;
   mat4 rotationY( in float angle ) {
     return mat4(
-      cos(angle),   0,    sin(angle), 0,
+      cos(angle),  0,   sin(angle), 0,
       0,          1.0,  0,      0,
       -sin(angle),    0,    cos(angle), 0,
       0,          0,    0,      1
@@ -533,7 +532,6 @@ const sideSticksVertex = `
 
     transformed.y += height / 2.;
     
-    // Push the stick outward by our custom X offset
     transformed.x += -width / 2. + aOffsetX;
     
     vec4 mvPosition = modelViewMatrix * vec4(transformed, 1.);
@@ -747,18 +745,16 @@ class LightsSticks {
     this.options = options;
   }
 
-  // FIX: Added sideMultiplier (-1 for Left, 1 for Right) to push sticks to BOTH sides of the screen
   init(sideMultiplier: number) {
     const options = this.options;
     const geometry = new THREE.PlaneGeometry(1, 1);
     const instanced = new THREE.InstancedBufferGeometry().copy(geometry as any) as THREE.InstancedBufferGeometry;
     
-    // FIX: Multiply the sticks by 5 to create a dense, massive "cityscape" on the sides
     const totalSticks = options.totalSideLightSticks * 5; 
     instanced.instanceCount = totalSticks;
 
     const aOffset: number[] = [];
-    const aOffsetX: number[] = []; // NEW: Array for scattering sticks outward
+    const aOffsetX: number[] = [];
     const aColor: number[] = [];
     const aMetrics: number[] = [];
 
@@ -773,10 +769,8 @@ class LightsSticks {
       const width = random(options.lightStickWidth);
       const height = random(options.lightStickHeight);
       
-      // Randomly spawn sticks deeply into the Z axis
       aOffset.push(Math.random() * options.length);
 
-      // FIX: Scatter them widely on the X axis (2 to 80 units outward) to fill empty wide screens
       const outwardSpread = 2 + Math.pow(Math.random(), 2) * 80;
       aOffsetX.push(outwardSpread * sideMultiplier);
 
@@ -931,7 +925,7 @@ class App {
   leftCarLights: CarLights;
   rightCarLights: CarLights;
   leftSticks: LightsSticks;
-  rightSticks: LightsSticks; // FIX: Added Right Sticks
+  rightSticks: LightsSticks;
   fogUniforms: Record<string, { value: any }>;
   fovTarget: number;
   speedUpTarget: number;
@@ -1008,7 +1002,6 @@ class App {
       new THREE.Vector2(1, 0 + options.carLightsFade)
     );
     
-    // Instantiate both left and right sticks
     this.leftSticks = new LightsSticks(this, options);
     this.rightSticks = new LightsSticks(this, options);
 
@@ -1118,11 +1111,9 @@ class App {
     this.rightCarLights.init();
     this.rightCarLights.mesh.position.setX(options.roadWidth / 2 + options.islandWidth / 2);
 
-    // FIX: Initialize Left Sticks with -1 multiplier (Push Left)
     this.leftSticks.init(-1);
     this.leftSticks.mesh.position.setX(-(options.roadWidth + options.islandWidth / 2));
     
-    // FIX: Initialize Right Sticks with 1 multiplier (Push Right)
     this.rightSticks.init(1);
     this.rightSticks.mesh.position.setX(options.roadWidth + options.islandWidth / 2);
 
@@ -1174,7 +1165,6 @@ class App {
     this.rightCarLights.update(time);
     this.leftCarLights.update(time);
     
-    // FIX: Update both sides of the city
     this.leftSticks.update(time);
     this.rightSticks.update(time);
     
@@ -1312,9 +1302,13 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = DEFAULT_EFFECT_OPTION
     const container = hyperspeed.current;
     if (!container) return;
 
+    // --- OVERRIDING OPTIONS FOR MASSIVE WARP SPEED ---
     const options: HyperspeedOptions = {
       ...defaultOptions,
       ...effectOptions,
+      // FORCE high interactivity limits so it feels instantly fast
+      speedUp: 20, 
+      fovSpeedUp: 140,
       colors: { ...defaultOptions.colors, ...effectOptions.colors }
     };
     
@@ -1338,7 +1332,8 @@ const Hyperspeed: FC<HyperspeedProps> = ({ effectOptions = DEFAULT_EFFECT_OPTION
     };
   }, [effectOptions]);
 
-  return <div id="lights" className="absolute inset-0 w-full h-full overflow-hidden" ref={hyperspeed}></div>;
+  // NEW: Added pointer-events-auto and cursor styles to guarantee interactivity
+  return <div id="lights" className="absolute inset-0 w-full h-full overflow-hidden pointer-events-auto cursor-crosshair active:cursor-grabbing" ref={hyperspeed}></div>;
 };
 
 export default Hyperspeed;
