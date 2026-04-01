@@ -6,6 +6,12 @@ import TiltCard from '@/components/TiltCard';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// --- NEW: FORCE GPU ACCELERATION ---
+gsap.config({
+  force3D: true, 
+});
+
 import Ballpit from '@/components/Ballpit';
 
 // Register GSAP ScrollTrigger to ensure they sync properly

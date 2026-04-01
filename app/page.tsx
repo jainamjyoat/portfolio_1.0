@@ -5,6 +5,11 @@ import Lenis from 'lenis';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
+// --- NEW: FORCE GPU ACCELERATION ---
+gsap.config({
+  force3D: true, 
+});
+
 // Import your backgrounds
 import { GridScan } from '@/app/GridScan';
 import Hyperspeed from '@/components/Hyperspeed';
